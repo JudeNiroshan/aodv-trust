@@ -1,5 +1,6 @@
 //#include "stdafx.h"
 #include "RecommendationTable.h"
+#include <string>
 #include <iostream>
 #include <vector>
 
@@ -46,10 +47,11 @@ std::vector<RecommendationTableEntry>& RecommendationTable::getRecommendedNodeEn
 	std::vector<RecommendationTableEntry>& test = this->getRecommendationTableEntries();
 
 	// TODO: need to have a logic here.
-	for (RecommendationTableEntry node : recommendationTableRecords) {
-			if (node.getneighborNodeId() == nodeId) {
-				test.push_back(node);
-			}
+	for (std::vector<RecommendationTableEntry>::iterator it = recommendationTableRecords.begin(); it != recommendationTableRecords.end(); it++)
+	{
+		if (it->getneighborNodeId() == nodeId) {
+			test.push_back(*it);
+		}
 	}
 
 	//need to do something(exception handling) for in all the calling functions
@@ -70,9 +72,9 @@ void RecommendationTable::printTable()
 	//}
 
 	std::cout << "| " << "Neighbor Node" << columnSeperator << "Matuarity Level" << std::endl;
-
-	for (RecommendationTableEntry &node : recommendationTableRecords) {
-		std::cout << "| " << node.getneighborNodeName() << "\t\t" <<columnSeperator << node.getMaturityLevel() << "\t\t" << columnSeperator << std::endl;
+	for (std::vector<RecommendationTableEntry>::iterator it = recommendationTableRecords.begin(); it != recommendationTableRecords.end(); it++)
+	{
+		std::cout << "| " << it->getneighborNodeName() << "\t\t" <<columnSeperator << it->getMaturityLevel() << "\t\t" << columnSeperator << std::endl;
 	}
 
 }

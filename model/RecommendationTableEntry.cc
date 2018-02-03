@@ -1,5 +1,6 @@
 //#include "stdafx.h"
 #include "RecommendationTableEntry.h"
+#include <string>
 
 namespace ns3
 {
@@ -10,12 +11,12 @@ RecommendationTableEntry::RecommendationTableEntry()
 {
 }
 
-string RecommendationTableEntry::getneighborNodeId()
+std::string RecommendationTableEntry::getneighborNodeId()
 {
 	return this->neighborNodeId;
 }
 
-string RecommendationTableEntry::getneighborNodeName()
+std::string RecommendationTableEntry::getneighborNodeName()
 {
 	return this->neighborNodeName;
 }
@@ -27,12 +28,12 @@ std::vector<std::string> RecommendationTableEntry::getRecommendingNodesList()
 
 
 
-void RecommendationTableEntry::setNeighborNodeId(string neighborNodeId)
+void RecommendationTableEntry::setNeighborNodeId(std::string neighborNodeId)
 {
 	this->neighborNodeId = neighborNodeId;
 }
 
-void RecommendationTableEntry::setNeighborNodeName(string neighborNodeName)
+void RecommendationTableEntry::setNeighborNodeName(std::string neighborNodeName)
 {
 	this->neighborNodeName = neighborNodeName;
 }

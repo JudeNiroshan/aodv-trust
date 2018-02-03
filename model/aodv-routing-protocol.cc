@@ -42,6 +42,12 @@
 #include "TrustTable.h"
 #include <algorithm>
 #include <limits>
+#include "TestValueGenerator.h"
+#include "DirTrustCal.h"
+#include "IndTrustCal.h"
+#include "BackupTable.h"
+#include "RecommendationTable.h"
+#include "TrustLevelClassifier.h"
 
 NS_LOG_COMPONENT_DEFINE ("AodvTrustRoutingProtocol");
 
@@ -305,11 +311,56 @@ RoutingProtocol::AssignStreams (int64_t stream)
 void
 RoutingProtocol::Start ()
 {
-   TrustTable* trust;
-   trust = TrustTable::getInstance();
-   trust->printTable();
+	/*TestValueGeneratorNew ts;
+	ts.print();*/
 
-  NS_LOG_FUNCTION (this);
+
+	TrustTable* dirTrustTable = TestValueGenerator::getDummyDirTrustTable();
+	dirTrustTable->printTable();
+
+	std::cout << "--After calculating direct trust--" << std::endl;
+
+	DirTrustCal dirCalculator;
+	dirCalculator.calculateDirectTrust(dirTrustTable);
+	dirTrustTable->printTable();
+
+	std::cout << "-----------------------------------" << std::endl;
+	std::cout << "-----------------------------------" << std::endl;
+
+	TrustTable* trustTable = TestValueGenerator::getDummyTrustTable();
+	trustTable->printTable();
+
+	IndTrustCal indTrustCal;
+	indTrustCal.setTrustTable(trustTable);
+
+	std::vector<TrustTableEntry>& node_entry_vector = trustTable->getTrustTableEntries();
+
+	for (std::vector<TrustTableEntry>::iterator it = node_entry_vector.begin(); it != node_entry_vector.end(); it++) {
+		double ind_trust_value = indTrustCal.calculateIndirectTrust(*it);
+		it->updateIndirectTrust(ind_trust_value);
+		it->calculateGlobalTrust();
+		//TODO: inside above calculateGlobalTrust() need to update backupTable.
+	}
+
+	std::cout << "After the calculation process..." << std::endl;
+
+	trustTable->printTable();
+	BackupTable::getInstance()->printTable();
+
+	RecommendationTable* recomendationTable = TestValueGenerator::getDummyRecommendationTableByTrustTable(trustTable);
+
+	std::cout << "Recommendation Table After adding values..." << std::endl;
+	recomendationTable->printTable();
+
+	TrustLevelClassifier classifier;
+	classifier.identifyTrustLevel(trustTable);
+
+
+   /*TrustTable* trust;
+   trust = TrustTable::getInstance();
+   trust->printTable();*/
+
+  /*NS_LOG_FUNCTION (this);
   if (EnableHello)
     {
       m_nb.ScheduleTimer ();
@@ -320,7 +371,7 @@ RoutingProtocol::Start ()
 
   m_rerrRateLimitTimer.SetFunction (&RoutingProtocol::RerrRateLimitTimerExpire,
                                     this);
-  m_rerrRateLimitTimer.Schedule (Seconds (1));
+  m_rerrRateLimitTimer.Schedule (Seconds (1));*/
 
 }
 

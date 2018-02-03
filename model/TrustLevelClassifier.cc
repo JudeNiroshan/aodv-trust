@@ -8,7 +8,7 @@
 #include "IndTrustCal.h"
 #include "TrustTableEntry.h"
 #include "DirTrustCal.h"
-#include "Node.h"
+#include "NodeEntry.h"
 #include "TestValueGenerator.h"
 #include "TrustLevelClassifier.h"
 #include "Spiral.h"
@@ -34,49 +34,47 @@ void TrustLevelClassifier::identifyTrustLevel(TrustTable* trustTable)
 	std::vector<TrustTableEntry>& node_entry_vector = trustTable->getTrustTableEntries();
 	double node_GT;
 
-	for (TrustTableEntry& node : node_entry_vector) {
+	for (std::vector<TrustTableEntry>::iterator it = node_entry_vector.begin(); it != node_entry_vector.end(); it++) {
+		node_GT = it->getGlobalTrust();
 
-		node_GT = node.getGlobalTrust();
-
-		std::cout << "Trust level: " << node.getTrustLevel() << std::endl;
-		std::cout << "Indirect Trust: " << node.getIndirectTrust() << std::endl;
+		std::cout << "Trust level: " << it->getTrustLevel() << std::endl;
+		std::cout << "Indirect Trust: " << it->getIndirectTrust() << std::endl;
 
 		if (node_GT > Threshold_trust)
 		{
 			if (node_GT > Threshold_trustWorthy)
 			{
-				node.setTrustLevel(1);
+				it->setTrustLevel(1);
 			}
 			else
 			{
-				node.setTrustLevel(2);
+				it->setTrustLevel(2);
 			}
 		}
-
 		else
 		{
 			if (node_GT > Threshold_selfish)
 			{
-				node.setTrustLevel(3);
+				it->setTrustLevel(3);
 
-				//double	reduction_factor = calculateReductionFactor(node.getInteractionCount(), node.getGlobalTrust());
+						//double	reduction_factor = calculateReductionFactor(node.getInteractionCount(), node.getGlobalTrust());
 
 
-				//RecommendationTable* recTable = TestValueGenerator::getDummyRecommendationTableByTrustTable(trustTable);
+						//RecommendationTable* recTable = TestValueGenerator::getDummyRecommendationTableByTrustTable(trustTable);
 
-				//std::vector<RecommendationTableEntry> rec_entry_vector = recTable->getRecommendationTableEntries();
-				//std::vector<string>* recommendingNodesList;
+						//std::vector<RecommendationTableEntry> rec_entry_vector = recTable->getRecommendationTableEntries();
+						//std::vector<string>* recommendingNodesList;
 
-				//for (vector<RecommendationTableEntry>::iterator it = rec_entry_vector.begin(); it != rec_entry_vector.end(); it++) {
-				//	
+						//for (vector<RecommendationTableEntry>::iterator it = rec_entry_vector.begin(); it != rec_entry_vector.end(); it++) {
+						//
 
-				//	//for (vector<RecommendationTableEntry>::iterator recNode = recommendingNodesList.begin(); recNode != recommendingNodesList.end(); recNode++)
-				//	//{
-				//	//	recNode->
-				//	//}
-				//}
+						//	//for (vector<RecommendationTableEntry>::iterator recNode = recommendingNodesList.begin(); recNode != recommendingNodesList.end(); recNode++)
+						//	//{
+						//	//	recNode->
+						//	//}
+						//}
 
-//recalculateIndirectTrust(it->getIndirectTrust(), reduction_factor);
+		//recalculateIndirectTrust(it->getIndirectTrust(), reduction_factor);
 			}
 			else
 			{
@@ -84,13 +82,14 @@ void TrustLevelClassifier::identifyTrustLevel(TrustTable* trustTable)
 				Spiral model;
 				double *past_global_trust_range;
 				past_global_trust_range = model.getMinMaxTrust(BackupTable::getInstance()->getTrustList());
-
-				model.addMaliciousCategory(past_global_trust_range, trustTable);
+				std::cout << "Max GT:- " << past_global_trust_range[1] << std::endl;
+//				model.addMaliciousCategory(past_global_trust_range, trustTable);
 			}
 		}
 
-		std::cout << "Trust level: " << node.getTrustLevel() << std::endl;
-		std::cout << "Indirect Trust: " << node.getIndirectTrust() << std::endl;
+		std::cout << "Trust level: " << it->getTrustLevel() << std::endl;
+		std::cout << "Indirect Trust: " << it->getIndirectTrust() << std::endl;
+
 	}
 }
 

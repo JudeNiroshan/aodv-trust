@@ -36,12 +36,13 @@ void TrustTable::removeTrustTableEntry(TrustTableEntry entry)
 TrustTableEntry TrustTable::getTrustTableEntryByNodeId(std::string nodeId)
 {
 	TrustTableEntry entry;
-
-	for (TrustTableEntry &node : trustTableRecords) {
-		if (node.getDestinationNode()->getNodeId() == nodeId) {
-			return node;
+	for (std::vector<TrustTableEntry>::iterator it = trustTableRecords.begin(); it != trustTableRecords.end(); it++)
+	{
+		if (it->getDestinationNode()->getNodeId() == nodeId) {
+			return *it;
 		}
 	}
+
 	//need to do something(exception handling) for in all the calling functions
 	return entry;
 }
@@ -49,11 +50,13 @@ TrustTableEntry TrustTable::getTrustTableEntryByNodeId(std::string nodeId)
 std::vector<TrustTableEntry> TrustTable::getBlacklistedTrustTableEntries()
 {
 	std::vector<TrustTableEntry> blacklistedVector;
-	for (TrustTableEntry &node : trustTableRecords) {
-		if (node.getBlacklist()) {
-			blacklistedVector.push_back(node);
+	for (std::vector<TrustTableEntry>::iterator it = trustTableRecords.begin(); it != trustTableRecords.end(); it++)
+	{
+		if (it->getBlacklist()) {
+			blacklistedVector.push_back(*it);
 		}
 	}
+
 	return blacklistedVector;
 }
 
@@ -71,9 +74,9 @@ void TrustTable::printTable()
 {
 	std::cout << ">>>>>>>>>>>>>> Direct Trust Table <<<<<<<<<<<<<<<" << std::endl;
 	std::cout << "| "<< "Destination Node"<< columnSeperator << "Direct Trust" << columnSeperator << "Indirect Trust" << columnSeperator << "Interactions" << columnSeperator << "Global Trust"<< columnSeperator << "Trust Level" << std::endl;
-
-	for (TrustTableEntry &node : trustTableRecords) {
-		std::cout << "| " << node.getDestinationNode()->getNodeName() << "\t\t" << columnSeperator << node.getDirectTrust() << "\t\t" << columnSeperator << node.getIndirectTrust() << "\t\t" << columnSeperator << node.getInteractionCount() << "\t\t"<< columnSeperator << node.getGlobalTrust() << "\t\t" << columnSeperator << node.getTrustLevel() << std::endl;
+	for (std::vector<TrustTableEntry>::iterator it = trustTableRecords.begin(); it != trustTableRecords.end(); it++)
+	{
+		std::cout << "| " << it->getDestinationNode()->getNodeName() << "\t\t" << columnSeperator << it->getDirectTrust() << "\t\t" << columnSeperator << it->getIndirectTrust() << "\t\t" << columnSeperator << it->getInteractionCount() << "\t\t"<< columnSeperator << it->getGlobalTrust() << "\t\t" << columnSeperator << it->getTrustLevel() << std::endl;
 	}
 }
 

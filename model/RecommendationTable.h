@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 #include "RecommendationTableEntry.h"
 
 namespace ns3

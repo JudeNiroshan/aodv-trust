@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 #include "TrustTableEntry.h"
 
 namespace ns3
@@ -11,7 +12,7 @@ class TrustTable
 {
 private:
 	TrustTable();
-        std::string columnSeperator;
+    std::string columnSeperator;
 	std::vector<TrustTableEntry> trustTableRecords;
 	static TrustTable* instance;
 public:

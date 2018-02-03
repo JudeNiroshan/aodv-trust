@@ -7,14 +7,14 @@ namespace ns3
 namespace aodv
 {
 
-class TestValueGenerator
+class TestValueGeneratorNew
 {
 public:
-	TestValueGenerator();
-	static TrustTable* getDummyTrustTable();
+	TestValueGeneratorNew();
 	static TrustTable* getDummyDirTrustTable();
+	static TrustTable* getDummyTrustTable();
 	static RecommendationTable* getDummyRecommendationTableByTrustTable(TrustTable* trustTable);
-	~TestValueGenerator();
+	~TestValueGeneratorNew();
 };
 
 }

@@ -2,7 +2,7 @@
 #include "TestValueGenerator.h"
 #include "RecommendationTable.h"
 #include "IndTrustCal.h"
-#include "Node.h"
+#include "NodeEntry.h"
 #include <iostream>
 
 namespace ns3
@@ -15,17 +15,18 @@ TestValueGenerator::TestValueGenerator()
 {
 }
 
+
 TrustTable* TestValueGenerator::getDummyTrustTable()
 {
-	Node* node1 = new Node();
+	NodeEntry* node1 = new NodeEntry();
 	node1->setNodeId("0");
 	node1->setNodeName("Node A");
 
-	Node* node2 = new Node();
+	NodeEntry* node2 = new NodeEntry();
 	node2->setNodeId("1");
 	node2->setNodeName("Node B");
 
-	Node* node3 = new Node();
+	NodeEntry* node3 = new NodeEntry();
 	node3->setNodeId("2");
 	node3->setNodeName("Node C");
 
@@ -52,11 +53,11 @@ TrustTable* TestValueGenerator::getDummyTrustTable()
 
 TrustTable * TestValueGenerator::getDummyDirTrustTable()
 {
-	Node* node1 = new Node();
+	NodeEntry* node1 = new NodeEntry();
 	node1->setNodeId("172.168.1.1");
 	node1->setNodeName("B");
 
-	Node* node2 = new Node();
+	NodeEntry* node2 = new NodeEntry();
 	node2->setNodeId("172.168.1.2");
 	node2->setNodeName("C");
 
@@ -76,41 +77,35 @@ TrustTable * TestValueGenerator::getDummyDirTrustTable()
 	return trustTable;
 }
 
-RecommendationTable * TestValueGenerator::getDummyRecommendationTable()
-{
-	return nullptr;
-}
-
 
 RecommendationTable * TestValueGenerator::getDummyRecommendationTableByTrustTable(TrustTable* trustTable)
 {
 
 	std::vector<TrustTableEntry>& node_entry_vector = trustTable->getTrustTableEntries();
-	RecommendationTable *recTable = new RecommendationTable();
+	RecommendationTable *recTable = RecommendationTable::getInstance();
 	double matuarityLevel;
 	double i_all = 0;
 	int i_p_node;
 
 	for (std::vector<TrustTableEntry>::iterator it = node_entry_vector.begin(); it != node_entry_vector.end(); it++)
 	{
-		i_p_node = it->getInteractionCount();
-		
+			i_p_node = it->getInteractionCount();
 
-		for (TrustTableEntry& entryNode : node_entry_vector) {
-			i_all = i_all + entryNode.getInteractionCount();
-		}
+			for (std::vector<TrustTableEntry>::iterator it2 = node_entry_vector.begin(); it2 != node_entry_vector.end(); it2++) {
+				i_all = i_all + it2->getInteractionCount();
+			}
 
-		matuarityLevel = i_p_node / i_all;
+			matuarityLevel = i_p_node / i_all;
 
 
-		Node *node;
-		RecommendationTableEntry entry;
-		node = it->getDestinationNode();
-		entry.setNeighborNodeId(node->getNodeId());
-		entry.setNeighborNodeName(node->getNodeName());
-		entry.setMaturityLevel(matuarityLevel);
+			NodeEntry *node;
+			RecommendationTableEntry entry;
+			node = it->getDestinationNode();
+			entry.setNeighborNodeId(node->getNodeId());
+			entry.setNeighborNodeName(node->getNodeName());
+			entry.setMaturityLevel(matuarityLevel);
 
-		recTable->addRecommendationTableEntry(entry);
+			recTable->addRecommendationTableEntry(entry);
 	}
 
 	return recTable;

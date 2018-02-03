@@ -1,4 +1,5 @@
 #include "NodeEntry.h"
+#include <string>
 
 namespace ns3
 {

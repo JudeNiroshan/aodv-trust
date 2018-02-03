@@ -37,9 +37,9 @@ void BackupTable::printTable()
 {
 	std::cout << ">>>>>>>>>>>>>> Backup Table <<<<<<<<<<<<<<<" << std::endl;
 	std::cout << "| " << "Node" << columnSeperator << "Trust Value" << columnSeperator << "Time Duration" << columnSeperator << "Analyzed Result" << std::endl;
-
-	for (BackupTableEntry &node : backupTableRecords) {
-		std::cout << "| " << node.getNeiNode()->getNodeName() << columnSeperator << node.getTrustValue() << "\t" << columnSeperator << node.getTimeDuration() << "\t\t" << columnSeperator << node.getResult() << std::endl;
+	for (std::vector<BackupTableEntry>::iterator it = backupTableRecords.begin(); it != backupTableRecords.end(); it++)
+	{
+		std::cout << "| " << it->getNeiNode()->getNodeName() << columnSeperator << it->getTrustValue() << "\t" << columnSeperator << it->getTimeDuration() << "\t\t" << columnSeperator << it->getResult() << std::endl;
 	}
 }
 

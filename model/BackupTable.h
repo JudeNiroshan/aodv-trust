@@ -1,6 +1,7 @@
 #include "NodeEntry.h"
 #include "BackupTableEntry.h"
 #include <vector>
+#include <string>
 
 namespace ns3
 {
