@@ -8,19 +8,9 @@ namespace aodv
 {
 
 
-TrustTable* TrustTable::instance = NULL;
-
 TrustTable::TrustTable()
 {
 	columnSeperator = " | ";
-}
-
-TrustTable * TrustTable::getInstance()
-{
-	if (instance == NULL) {
-		instance = new TrustTable();
-	}
-	return instance;
 }
 
 void TrustTable::addTrustTableEntry(TrustTableEntry entry)

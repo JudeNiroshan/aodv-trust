@@ -10,19 +10,9 @@ namespace aodv
 {
 
 
-RecommendationTable* RecommendationTable::instance = NULL;
-
 RecommendationTable::RecommendationTable()
 {
 	columnSeperator = " | ";
-}
-
-RecommendationTable * RecommendationTable::getInstance()
-{
-	if (instance == NULL) {
-		instance = new RecommendationTable();
-	}
-	return instance;
 }
 
 

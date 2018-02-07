@@ -14,10 +14,8 @@ class RecommendationTable
 private:
 	std::string columnSeperator;
 	std::vector<RecommendationTableEntry> recommendationTableRecords;
-	static RecommendationTable* instance;
 public:
 	RecommendationTable();
-	static RecommendationTable* getInstance();
 	void addRecommendationTableEntry(RecommendationTableEntry entry);
 	void removeRecommendationTableEntry(RecommendationTableEntry entry);
 	std::vector<RecommendationTableEntry>& getRecommendationTableEntries();

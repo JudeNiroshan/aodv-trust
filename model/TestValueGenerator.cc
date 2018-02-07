@@ -44,7 +44,7 @@ TrustTable* TestValueGenerator::getDummyTrustTable()
 	row2.setInteractionCount(3);
 	row2.calculateGlobalTrust();
 
-	TrustTable* trustTable = TrustTable::getInstance();
+	TrustTable* trustTable = new TrustTable();
 	trustTable->addTrustTableEntry(row1);
 	trustTable->addTrustTableEntry(row2);
 
@@ -70,7 +70,7 @@ TrustTable * TestValueGenerator::getDummyDirTrustTable()
 	row2.setInteractionCount(8);
 
 
-	TrustTable* trustTable = TrustTable::getInstance();
+	TrustTable* trustTable = new TrustTable();
 	trustTable->addTrustTableEntry(row1);
 	trustTable->addTrustTableEntry(row2);
 
@@ -82,7 +82,7 @@ RecommendationTable * TestValueGenerator::getDummyRecommendationTableByTrustTabl
 {
 
 	std::vector<TrustTableEntry>& node_entry_vector = trustTable->getTrustTableEntries();
-	RecommendationTable *recTable = RecommendationTable::getInstance();
+	RecommendationTable *recTable = new RecommendationTable();
 	double matuarityLevel;
 	double i_all = 0;
 	int i_p_node;

@@ -11,12 +11,10 @@ namespace aodv
 class TrustTable
 {
 private:
-	TrustTable();
     std::string columnSeperator;
 	std::vector<TrustTableEntry> trustTableRecords;
-	static TrustTable* instance;
 public:
-	static TrustTable* getInstance();
+        TrustTable();
 	void addTrustTableEntry(TrustTableEntry entry);
 	void removeTrustTableEntry(TrustTableEntry entry);
 	TrustTableEntry getTrustTableEntryByNodeId(std::string nodeId);
