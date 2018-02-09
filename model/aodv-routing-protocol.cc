@@ -315,9 +315,14 @@ void
 RoutingProtocol::Start ()
 {
   std::cout << "called RoutingProtocol::Start()" << std::endl;
+<<<<<<< HEAD
 /*	TestValueGeneratorNew ts;
 	ts.print();
 */
+=======
+	/*TestValueGeneratorNew ts;
+	ts.print();*/
+>>>>>>> db9e292bde8b158d552351b39be18b4516dc6aa2
 
 	TrustTable* dirTrustTable = TestValueGenerator::getDummyDirTrustTable();
 	dirTrustTable->printTable();
