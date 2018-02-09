@@ -6,4 +6,4 @@ This contains a new ns-3 module which created for 4th year final research projec
 
  - Clone this project into your ns-3 src folder. 
  - Add this new module to wsscript in the src folder
- - run ./build.py
+ - run ```./build.py --enable-examples --enable-tests```
