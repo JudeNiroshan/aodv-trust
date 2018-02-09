@@ -40,6 +40,12 @@
 #include "ns3/ipv4-interface.h"
 #include "ns3/ipv4-l3-protocol.h"
 #include <map>
+/*
+#include "MetaDataToolKit.h"
+#include "TrustTable.h"
+#include "RecommendationTable.h"
+#include "BackupTable.h"
+*/
 
 namespace ns3
 {
@@ -163,6 +169,18 @@ private:
   uint16_t m_rreqCount;
   /// Number of RERRs used for RERR rate control
   uint16_t m_rerrCount;
+
+  /*
+  MetaDataToolKit m_metaDataToolkit;
+  ///
+  TrustTable m_trustTable;
+  ///
+  RecommendationTable m_recommendationTable;
+  ///
+  BackupTable m_backupTable;
+  ///
+*/
+
 
 private:
   /// Start protocol operation

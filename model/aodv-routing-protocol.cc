@@ -315,11 +315,11 @@ void
 RoutingProtocol::Start ()
 {
   std::cout << "called RoutingProtocol::Start()" << std::endl;
-	/*TestValueGeneratorNew ts;
-	ts.print();*/
+/*	TestValueGeneratorNew ts;
+	ts.print();
+*/
 
-
-	/*TrustTable* dirTrustTable = TestValueGenerator::getDummyDirTrustTable();
+	TrustTable* dirTrustTable = TestValueGenerator::getDummyDirTrustTable();
 	dirTrustTable->printTable();
 
 	std::cout << "--After calculating direct trust--" << std::endl;
@@ -357,7 +357,7 @@ RoutingProtocol::Start ()
 	recomendationTable->printTable();
 
 	TrustLevelClassifier classifier;
-	classifier.identifyTrustLevel(trustTable);*/
+	classifier.identifyTrustLevel(trustTable);
 
 
    /*TrustTable* trust;

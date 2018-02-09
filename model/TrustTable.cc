@@ -23,12 +23,12 @@ void TrustTable::removeTrustTableEntry(TrustTableEntry entry)
 	trustTableRecords.pop_back(); //need to change this
 }
 
-TrustTableEntry TrustTable::getTrustTableEntryByNodeId(std::string nodeId)
+TrustTableEntry TrustTable::getTrustTableEntryByNodeId(Ipv4Address nodeId)
 {
 	TrustTableEntry entry;
 	for (std::vector<TrustTableEntry>::iterator it = trustTableRecords.begin(); it != trustTableRecords.end(); it++)
 	{
-		if (it->getDestinationNode()->getNodeId() == nodeId) {
+		if (it->getDestinationNode() == nodeId) {
 			return *it;
 		}
 	}
@@ -66,7 +66,7 @@ void TrustTable::printTable()
 	std::cout << "| "<< "Destination Node"<< columnSeperator << "Direct Trust" << columnSeperator << "Indirect Trust" << columnSeperator << "Interactions" << columnSeperator << "Global Trust"<< columnSeperator << "Trust Level" << std::endl;
 	for (std::vector<TrustTableEntry>::iterator it = trustTableRecords.begin(); it != trustTableRecords.end(); it++)
 	{
-		std::cout << "| " << it->getDestinationNode()->getNodeName() << "\t\t" << columnSeperator << it->getDirectTrust() << "\t\t" << columnSeperator << it->getIndirectTrust() << "\t\t" << columnSeperator << it->getInteractionCount() << "\t\t"<< columnSeperator << it->getGlobalTrust() << "\t\t" << columnSeperator << it->getTrustLevel() << std::endl;
+		std::cout << "| " << it->getDestinationNode() << "\t\t" << columnSeperator << it->getDirectTrust() << "\t\t" << columnSeperator << it->getIndirectTrust() << "\t\t" << columnSeperator << it->getInteractionCount() << "\t\t"<< columnSeperator << it->getGlobalTrust() << "\t\t" << columnSeperator << it->getTrustLevel() << std::endl;
 	}
 }
 

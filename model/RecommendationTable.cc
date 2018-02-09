@@ -31,7 +31,7 @@ std::vector<RecommendationTableEntry>& RecommendationTable::getRecommendationTab
 	return recommendationTableRecords;
 }
 
-std::vector<RecommendationTableEntry>& RecommendationTable::getRecommendedNodeEntries(std::string nodeId)
+std::vector<RecommendationTableEntry>& RecommendationTable::getRecommendedNodeEntries(Ipv4Address nodeId)
 {
 	// TODO: return the recommended node entry vector
 	std::vector<RecommendationTableEntry>& test = this->getRecommendationTableEntries();
@@ -64,7 +64,7 @@ void RecommendationTable::printTable()
 	std::cout << "| " << "Neighbor Node" << columnSeperator << "Matuarity Level" << std::endl;
 	for (std::vector<RecommendationTableEntry>::iterator it = recommendationTableRecords.begin(); it != recommendationTableRecords.end(); it++)
 	{
-		std::cout << "| " << it->getneighborNodeName() << "\t\t" <<columnSeperator << it->getMaturityLevel() << "\t\t" << columnSeperator << std::endl;
+		std::cout << "| " << it->getneighborNodeId() << "\t\t" <<columnSeperator << it->getMaturityLevel() << "\t\t" << columnSeperator << std::endl;
 	}
 
 }

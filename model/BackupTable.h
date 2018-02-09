@@ -1,5 +1,6 @@
 #include "NodeEntry.h"
 #include "BackupTableEntry.h"
+#include "ns3/ipv4-address.h"
 #include <vector>
 #include <string>
 

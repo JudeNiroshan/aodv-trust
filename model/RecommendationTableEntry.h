@@ -3,6 +3,8 @@
 #include <vector>
 #include <list>
 #include "NodeEntry.h"
+#include "ns3/ipv4-address.h"
+
 
 namespace ns3
 {
@@ -15,27 +17,20 @@ class RecommendationTableEntry
 
 private:
 
-	std::string neighborNodeId;
-	std::string neighborNodeName;
+	Ipv4Address neighborNodeId;
 	std::vector<std::string> recommendingNodesList;
 	double maturityLevel;
 	bool blackList;
 	double recommendationValue;
 
 public:
-	std::string getneighborNodeId();
-	std::string getneighborNodeName();
-
+	Ipv4Address getneighborNodeId();
+	void setNeighborNodeId(Ipv4Address neighborNodeId);
 	std::vector<std::string> getRecommendingNodesList();
-
-
 	double getrecValue();
 	void setRecValue(double recommendationValue);
-
-	void setNeighborNodeId(std::string neighborNodeId);
-	void setNeighborNodeName(std::string neighborNodeName);
-	void setMaturityLevel(double maturityLevel);
 	int getMaturityLevel();
+	void setMaturityLevel(double maturityLevel);
 	RecommendationTableEntry();
 	~RecommendationTableEntry();
 };

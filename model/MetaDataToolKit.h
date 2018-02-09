@@ -1,5 +1,5 @@
 #pragma once
-#include "NodeEntry.h"
+#include "TrustTable.h"
 
 namespace ns3
 {
@@ -31,7 +31,7 @@ public:
 	int getRPLY();
 	int getNDF();
 	int getNDR();
-        NodeEntry* getAllNeiNodes();
+    TrustTable* getTrustTableEntries();
 
 
 	~MetaDataToolKit();

@@ -23,12 +23,12 @@ int TrustTableEntry::getInteractionCount()
 	return this->interaction_count;
 }
 
-void TrustTableEntry::setDestinationNode(NodeEntry* node)
+void TrustTableEntry::setDestinationNode(Ipv4Address node)
 {
 	this->destinationNode = node;
 }
 
-NodeEntry* TrustTableEntry::getDestinationNode()
+Ipv4Address TrustTableEntry::getDestinationNode()
 {
 	return this->destinationNode;
 }

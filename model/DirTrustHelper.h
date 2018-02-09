@@ -8,19 +8,28 @@ namespace aodv
 
 class DirTrustHelper
 {
+private:
+	int rreq;
+	int rply;
+	int hello;
+	int err;
+	int noOfDataPacketsForward;
+	int noOfDataPacketsReceived;
+	int noOfControlPackets;
+	int noOfDataPackets;
+
 public:
 	DirTrustHelper();
-	static int getNoOfRREQ(NodeEntry p_node);
-	static int getNoOfRPLY(NodeEntry p_node);
-	static int getNoOfHELLO(NodeEntry p_node);
-	static int getNoOfERR(NodeEntry p_node);
-	static int getNoOfSentDataPackets(NodeEntry p_node);
-	static int getNoOfReceivedDataPackets(NodeEntry p_node);
-	static NodeEntry* getAllNeiNodes();
+	 int getNoOfRREQ();
+	 int getNoOfRPLY();
+	 int getNoOfHELLO();
+	 int getNoOfERR();
+	 int getNoOfSentDataPackets();
+	 int getNoOfReceivedDataPackets();
+	 NodeEntry* getAllNeiNodes();
 	~DirTrustHelper();
 
 };
 
 }
 }
-

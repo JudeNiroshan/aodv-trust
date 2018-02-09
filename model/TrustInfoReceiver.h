@@ -1,5 +1,6 @@
 #pragma once
 #include "NodeEntry.h"
+#include "ns3/ipv4-address.h"
 
 namespace ns3
 {
@@ -11,7 +12,7 @@ class TrustInfoReceiver
 public:
 	TrustInfoReceiver();
 	void validateReceivedTrustInfo();
-	void sendMaliciousBroadcast(NodeEntry* node);
+	void sendMaliciousBroadcast(Ipv4Address node);
 	~TrustInfoReceiver();
 };
 

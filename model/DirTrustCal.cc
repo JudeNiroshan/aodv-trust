@@ -1,13 +1,16 @@
-//#include "stdafx.h"
 #include "DirTrustCal.h"
 #include "DirTrustHelper.h"
-#include "MetaDataTool.h"
-#include<math.h>
+#include "MetaDataToolKit.h"
+#include "TrustTableEntry.h"
+#include <math.h>
+#include <iostream>
+
 
 namespace ns3
 {
 namespace aodv
 {
+
 
 DirTrustCal::DirTrustCal()
 {
@@ -16,21 +19,46 @@ DirTrustCal::DirTrustCal()
 
 void DirTrustCal::calculateDirectTrust(TrustTable *trustTable)
 {
-	//double dt = 0;
+
 	std::vector<TrustTableEntry>& node_entry_vector = trustTable->getTrustTableEntries();
+
+	//MetaDataToolKit  metaDataTool;
+
+	DirTrustHelper dirTrustHelper;
 
 	for (std::vector<TrustTableEntry>::iterator it = node_entry_vector.begin(); it != node_entry_vector.end(); it++)
 	{
-		 
-		double rreq = DirTrustHelper::getNoOfRREQ(*it->getDestinationNode());
-		double rply = DirTrustHelper::getNoOfRPLY(*it->getDestinationNode());
-		double hello = DirTrustHelper::getNoOfHELLO(*it->getDestinationNode());
-		double err = DirTrustHelper::getNoOfERR(*it->getDestinationNode());
-		
+
+		double rreq = dirTrustHelper.getNoOfRREQ();
+		double rply =  dirTrustHelper.getNoOfRPLY();
+		double hello =  dirTrustHelper.getNoOfHELLO();
+		double err =  dirTrustHelper.getNoOfERR();
+		int sent =  dirTrustHelper.getNoOfSentDataPackets();
+		int received =  dirTrustHelper.getNoOfReceivedDataPackets();
+
+		/*
+
+		double rreq = dirTrustHelper.getNoOfRREQ(*it->getDestinationNode());
+		double rply =  dirTrustHelper.getNoOfRPLY(*it->getDestinationNode());
+		double hello =  dirTrustHelper.getNoOfHELLO(*it->getDestinationNode());
+		double err =  dirTrustHelper.getNoOfERR(*it->getDestinationNode());
+		int sent =  dirTrustHelper.getNoOfSentDataPackets(*it->getDestinationNode());
+		int received =  dirTrustHelper.getNoOfReceivedDataPackets(*it->getDestinationNode());
+		 *
+
+		int rreq = metaDataTool.getRREQ();
+		int rply = metaDataTool.getRPLY();
+		int hello = metaDataTool.getHELLO();
+		int err = metaDataTool.getERR();
+		int sent = metaDataTool.getNDF();
+		int received = metaDataTool.getNDR();
+*/
+
 		double cp = (rreq + rply + hello + err) / 4;
 
-		double sent = DirTrustHelper::getNoOfHELLO(*it->getDestinationNode());
-		double received = DirTrustHelper::getNoOfERR(*it->getDestinationNode());
+		if (received == 0) {
+			received = 1;
+		}
 
 		double dp = sent / received;
 
@@ -38,8 +66,10 @@ void DirTrustCal::calculateDirectTrust(TrustTable *trustTable)
 
 		double finaldt = calculateFinalDT(dt);
 
-
 		it->setDirectTrust(finaldt);
+
+
+
 	}
 
 }

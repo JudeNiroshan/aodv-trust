@@ -13,6 +13,69 @@ namespace aodv
 {
 
 
+/**
+* Method:    main
+* Returns:   0
+* Parameter:
+*/
+int main()
+{
+	TrustTable* dirTrustTable = TestValueGenerator::getDummyDirTrustTable();
+	dirTrustTable->printTable();
+
+	//identifyTrustLevel();
+	std::cout << "--After calculating direct trust--" << std::endl;
+
+	DirTrustCal dirCalculator;
+	dirCalculator.calculateDirectTrust(dirTrustTable);
+	dirTrustTable->printTable();
+
+	std::cout << "-----------------------------------" << std::endl;
+
+	TrustTable* trustTable = TestValueGenerator::getDummyTrustTable();
+	trustTable->printTable();
+
+	IndTrustCal indTrustCal;
+	indTrustCal.setTrustTable(trustTable);
+	std::vector<TrustTableEntry>& node_entry_vector = trustTable->getTrustTableEntries();
+
+	for (std::vector<TrustTableEntry>::iterator it = node_entry_vector.begin(); it != node_entry_vector.end(); it++) {
+
+		double ind_trust_value = indTrustCal.calculateIndirectTrust(*it);
+		it->updateIndirectTrust(ind_trust_value);
+		it->calculateGlobalTrust();
+		//TODO: inside above calculateGlobalTrust() need to update backupTable.
+
+	}
+	std::cout << "After the calculation process..." << std::endl;
+
+	trustTable->printTable();
+	BackupTable::getInstance()->printTable();
+
+
+	RecommendationTable* recomendationTable = TestValueGenerator::getDummyRecommendationTableByTrustTable(trustTable);
+
+	std::cout << "Recommendation Table After adding values..." << std::endl;
+	recomendationTable->printTable();
+
+	TrustLevelClassifier classifier;
+	classifier.identifyTrustLevel(trustTable);
+
+//	std::vector<RecommendationTableEntry>& rec_entry_vector = recomendationTable->getRecommendationTableEntries();
+
+	/*
+	for (RecommendationTableEntry& node : rec_entry_vector)
+	{
+
+	}*/
+	int pause;
+	std::cin >> pause;
+
+	return 0;
+}
+
+
+
 
 IndTrustCal::IndTrustCal()
 {

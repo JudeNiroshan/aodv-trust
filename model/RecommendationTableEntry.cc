@@ -11,14 +11,9 @@ RecommendationTableEntry::RecommendationTableEntry()
 {
 }
 
-std::string RecommendationTableEntry::getneighborNodeId()
+Ipv4Address RecommendationTableEntry::getneighborNodeId()
 {
 	return this->neighborNodeId;
-}
-
-std::string RecommendationTableEntry::getneighborNodeName()
-{
-	return this->neighborNodeName;
 }
 
 std::vector<std::string> RecommendationTableEntry::getRecommendingNodesList()
@@ -26,16 +21,9 @@ std::vector<std::string> RecommendationTableEntry::getRecommendingNodesList()
 	return this->recommendingNodesList;
 }
 
-
-
-void RecommendationTableEntry::setNeighborNodeId(std::string neighborNodeId)
+void RecommendationTableEntry::setNeighborNodeId(Ipv4Address neighborNodeId)
 {
 	this->neighborNodeId = neighborNodeId;
-}
-
-void RecommendationTableEntry::setNeighborNodeName(std::string neighborNodeName)
-{
-	this->neighborNodeName = neighborNodeName;
 }
 
 void RecommendationTableEntry::setMaturityLevel(double maturityLevel)

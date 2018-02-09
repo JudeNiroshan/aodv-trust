@@ -8,37 +8,49 @@ namespace aodv
 
 DirTrustHelper::DirTrustHelper()
 {
+		this->rreq = 1;
+		this->rply = 1;
+		this->err = 1;
+		this->hello = 1;
+		this->noOfDataPacketsForward = 1;
+		this->noOfDataPacketsReceived = 1;
 }
 
 
-int DirTrustHelper::getNoOfRREQ(NodeEntry p_node)
+int DirTrustHelper::getNoOfRREQ()
 {
-	return 1;
+	return this->rreq;
+	//return 1;
 }
 
-int DirTrustHelper::getNoOfRPLY(NodeEntry p_node)
+int DirTrustHelper::getNoOfRPLY()
 {
-	return 1;
+	return this->rply;
+	//return 1;
 }
 
-int DirTrustHelper::getNoOfHELLO(NodeEntry p_node)
+int DirTrustHelper::getNoOfHELLO()
 {
-	return 1;
+	return this->hello;
+	//return 1;
 }
 
-int DirTrustHelper::getNoOfERR(NodeEntry p_node)
+int DirTrustHelper::getNoOfERR()
 {
-	return 1;
+	return this->err;
+	//return 1;
 }
 
-int DirTrustHelper::getNoOfSentDataPackets(NodeEntry p_node)
+int DirTrustHelper::getNoOfSentDataPackets()
 {
-	return 2;
+	return this->noOfDataPacketsForward;
+	//return 2;
 }
 
-int DirTrustHelper::getNoOfReceivedDataPackets(NodeEntry p_node)
+int DirTrustHelper::getNoOfReceivedDataPackets()
 {
-	return 2;
+	return this->noOfDataPacketsReceived;
+	//return 2;
 }
 
 NodeEntry * DirTrustHelper::getAllNeiNodes()

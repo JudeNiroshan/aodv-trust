@@ -1,4 +1,4 @@
-#include "NodeEntry.h"
+#include "ns3/ipv4-address.h"
 #include <string>
 
 namespace ns3
@@ -9,14 +9,14 @@ namespace aodv
 class BackupTableEntry
 {
 private:
-	NodeEntry * neiNode;
+	Ipv4Address neiNode;
 	double trustValue;
 	double timeDuration;
 	std::string result;
 public:
 	BackupTableEntry();
-	void setNeiNode(NodeEntry* neiNode);
-	NodeEntry* getNeiNode();
+	void setNeiNode(Ipv4Address neiNode);
+	Ipv4Address getNeiNode();
 	void setTrustValue(double trustValue);
 	double getTrustValue();
 	void updateTrustValue(double trustValue);

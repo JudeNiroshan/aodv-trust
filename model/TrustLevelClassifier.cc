@@ -8,7 +8,6 @@
 #include "IndTrustCal.h"
 #include "TrustTableEntry.h"
 #include "DirTrustCal.h"
-#include "NodeEntry.h"
 #include "TestValueGenerator.h"
 #include "TrustLevelClassifier.h"
 #include "Spiral.h"
