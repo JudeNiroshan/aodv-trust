@@ -25,7 +25,8 @@ def build(bld):
         'model/RecommendationTableEntry.cc',
         'model/TrustLevelClassifier.cc',
         'model/Spiral.cc',
-        'model/TrustInfoReceiver.cc'
+        'model/TrustInfoReceiver.cc',
+        'model/MetaDataToolKit.cc'
         ]
 
     aodv_test = bld.create_ns3_module_test_library('aodv-trust')
@@ -56,7 +57,8 @@ def build(bld):
         'model/RecommendationTableEntry.h',
         'model/TrustLevelClassifier.h',
         'model/Spiral.h',
-        'model/TrustInfoReceiver.h'
+        'model/TrustInfoReceiver.h',
+        'model/MetaDataToolKit.h'
         ]
 
     if bld.env['ENABLE_EXAMPLES']:
