@@ -31,8 +31,6 @@ public:
 	int getRPLY();
 	int getNDF();
 	int getNDR();
-    TrustTable* getTrustTableEntries();
-
 
 	~MetaDataToolKit();
 };

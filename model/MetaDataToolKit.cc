@@ -33,7 +33,7 @@ void MetaDataToolKit::incERR()
 
 void MetaDataToolKit::incHELLO()
 {
-	this->hello = this->hello +1;
+	this->hello = this->hello + 1;
 }
 
 void MetaDataToolKit::incNDF()
@@ -50,8 +50,6 @@ int MetaDataToolKit::getHELLO()
 {
 	return this->hello;
 }
-
-
 
 int MetaDataToolKit::getERR()
 {
@@ -76,21 +74,6 @@ int MetaDataToolKit::getNDF()
 int MetaDataToolKit::getNDR()
 {
 	return this->noOfDataPacketsReceived;
-}
-
-
-TrustTable* MetaDataToolKit::getTrustTableEntries()
-{
-	TrustTableEntry* nodeArr = new TrustTableEntry[2];
-	TrustTableEntry n1;
-	n1.setDestinationNode("172.168.1.1");
-	nodeArr[0] = n1;
-
-	TrustTableEntry n2;
-	n2.setDestinationNode("172.168.1.2");
-	nodeArr[1] = n2;
-
-	return nodeArr;
 }
 
 MetaDataToolKit::~MetaDataToolKit()
