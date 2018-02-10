@@ -42,10 +42,10 @@
 #include <map>
 
 #include "MetaDataToolKit.h"
-/*#include "TrustTable.h"
+#include "TrustTable.h"
 #include "RecommendationTable.h"
 #include "BackupTable.h"
-*/
+
 
 namespace ns3
 {
@@ -170,16 +170,14 @@ private:
   /// Number of RERRs used for RERR rate control
   uint16_t m_rerrCount;
 
-
+  /// Object which tracks the data which used for trust based algorithms
   MetaDataToolKit m_metaDataToolkit;
-  /*///
+  /// Trust table which contains trust related data for directly connected nodes
   TrustTable m_trustTable;
-  ///
+  /// Recommendation table which contains recommendation data for directly connected nodes
   RecommendationTable m_recommendationTable;
-  ///
+  /// Backup table which contains historical trust data for directly connected nodes
   BackupTable m_backupTable;
-  ///
-*/
 
 
 private:
