@@ -88,6 +88,25 @@ RecommendationTable * TestValueGenerator::getDummyRecommendationTableByTrustTabl
 	return recTable;
 }
 
+BackupTable * TestValueGenerator::getDummyBackupTableByTrustTable(TrustTable * trustTable)
+{
+	std::vector<TrustTableEntry>& trust_entry_vector = trustTable->getTrustTableEntries();
+	BackupTable *backupTable = new BackupTable();
+	std::vector<BackupTableEntry> backup_entry_vector(trust_entry_vector.size());
+	int index = 0;
+	for (std::vector<TrustTableEntry>::iterator it = trust_entry_vector.begin(); it != trust_entry_vector.end(); it++)
+	{
+		backup_entry_vector.at(index).setNeiNode(it->getDestinationNode());
+		backup_entry_vector.at(index).setTrustValue(it->getGlobalTrust());
+		backup_entry_vector.at(index).setTimeDuration(2.3);
+		backupTable->addBackupTableEntry(backup_entry_vector.at(index));
+		index++;
+	}
+
+	//backupTable->printTable();
+	return backupTable;
+}
+
 
 TestValueGenerator::~TestValueGenerator()
 {

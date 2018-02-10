@@ -10,7 +10,7 @@ class Spiral
 public:
 	Spiral();
 	void addMaliciousCategory(double* past_global_trust_range, TrustTable* trustTable);
-	double* getMinMaxTrust(std::vector<double> trust_list);
+	double* getMinMaxTrust(TrustTable* trustTable);
 	~Spiral();
 };
 }

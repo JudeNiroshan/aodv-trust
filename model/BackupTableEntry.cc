@@ -1,4 +1,3 @@
-//#include "stdafx.h"
 #include "BackupTableEntry.h"
 
 namespace ns3

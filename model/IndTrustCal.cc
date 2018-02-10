@@ -5,7 +5,7 @@
 #include "TestValueGenerator.h"
 #include "TrustLevelClassifier.h"
 #include <iostream>
-#include "BackupTable.h"
+
 
 namespace ns3
 {
@@ -50,7 +50,9 @@ int main()
 	std::cout << "After the calculation process..." << std::endl;
 
 	trustTable->printTable();
-	BackupTable::getInstance()->printTable();
+
+	BackupTable* backupTable = TestValueGenerator::getDummyBackupTableByTrustTable(trustTable);
+	backupTable->printTable();
 
 
 	RecommendationTable* recomendationTable = TestValueGenerator::getDummyRecommendationTableByTrustTable(trustTable);

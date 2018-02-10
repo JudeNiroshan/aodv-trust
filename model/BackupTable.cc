@@ -1,4 +1,3 @@
-//#include "stdafx.h"
 #include "BackupTable.h"
 #include <iostream>
 
@@ -7,21 +6,12 @@ namespace ns3
 namespace aodv
 {
 
-BackupTable* BackupTable::instance = NULL;
-
 
 BackupTable::BackupTable()
 {
 	columnSeperator = " | ";
 }
 
-BackupTable * BackupTable::getInstance()
-{
-	if (instance == NULL) {
-		instance = new BackupTable();
-	}
-	return instance;
-}
 
 void BackupTable::addBackupTableEntry(BackupTableEntry entry)
 {

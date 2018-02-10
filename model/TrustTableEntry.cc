@@ -1,7 +1,7 @@
 //#include "stdafx.h"
 #include "TrustTableEntry.h"
 #include <iostream>
-#include "BackupTable.h"
+
 
 namespace ns3
 {
@@ -36,13 +36,13 @@ Ipv4Address TrustTableEntry::getDestinationNode()
 void TrustTableEntry::calculateGlobalTrust()
 {
 	this->globalTrust = this->dirTrust + this->indTrust;
-	BackupTableEntry entry;
+	/*BackupTableEntry entry;
 	entry.setNeiNode(this->destinationNode);
 	entry.setTrustValue(this->globalTrust);
 	entry.setTimeDuration(2.5);
 
 	BackupTable::getInstance()->addBackupTableEntry(entry);
-	BackupTable::getInstance()->addToTrustList(this->globalTrust);
+	BackupTable::getInstance()->addToTrustList(this->globalTrust);*/
 };
 
 double TrustTableEntry::getGlobalTrust()

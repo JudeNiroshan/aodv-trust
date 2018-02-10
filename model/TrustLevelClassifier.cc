@@ -1,17 +1,11 @@
-//#include "stdafx.h"
 #include "TrustLevelClassifier.h"
 #include "RecommendationTableEntry.h"
 #include "TestValueGenerator.h"
-#include <vector>
-#include <iostream>
-#include "BackupTable.h"
 #include "IndTrustCal.h"
 #include "TrustTableEntry.h"
 #include "DirTrustCal.h"
-#include "TestValueGenerator.h"
-#include "TrustLevelClassifier.h"
 #include "Spiral.h"
-
+#include <vector>
 #include <iostream>
 
 namespace ns3
@@ -80,7 +74,7 @@ void TrustLevelClassifier::identifyTrustLevel(TrustTable* trustTable)
 				//call spiral model method
 				Spiral model;
 				double *past_global_trust_range;
-				past_global_trust_range = model.getMinMaxTrust(BackupTable::getInstance()->getTrustList());
+				past_global_trust_range = model.getMinMaxTrust(trustTable);
 				std::cout << "Max GT:- " << past_global_trust_range[1] << std::endl;
 //				model.addMaliciousCategory(past_global_trust_range, trustTable);
 			}

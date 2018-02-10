@@ -1,8 +1,8 @@
-#include "NodeEntry.h"
-#include "BackupTableEntry.h"
-#include "ns3/ipv4-address.h"
+#pragma once
 #include <vector>
 #include <string>
+#include "BackupTableEntry.h"
+#include "ns3/ipv4-address.h"
 
 namespace ns3
 {
@@ -12,13 +12,11 @@ namespace aodv
 class BackupTable
 {
 private:
-	BackupTable();
 	std::string columnSeperator;
 	std::vector<BackupTableEntry> backupTableRecords;
 	std::vector<double> trustList;
-	static BackupTable* instance;
 public:
-	static BackupTable* getInstance();
+	BackupTable();
 	void addBackupTableEntry(BackupTableEntry entry);
 	std::vector<BackupTableEntry>& getBackupTableEntries();
 	void printTable();

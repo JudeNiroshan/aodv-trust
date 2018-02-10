@@ -314,15 +314,8 @@ RoutingProtocol::AssignStreams (int64_t stream)
 void
 RoutingProtocol::Start ()
 {
-  std::cout << "called RoutingProtocol::Start()" << std::endl;
-<<<<<<< HEAD
-/*	TestValueGeneratorNew ts;
-	ts.print();
-*/
-=======
-	/*TestValueGeneratorNew ts;
-	ts.print();*/
->>>>>>> db9e292bde8b158d552351b39be18b4516dc6aa2
+    std::cout << "called RoutingProtocol::Start()" << std::endl;
+
 
 	TrustTable* dirTrustTable = TestValueGenerator::getDummyDirTrustTable();
 	dirTrustTable->printTable();
@@ -354,7 +347,10 @@ RoutingProtocol::Start ()
 	std::cout << "After the calculation process..." << std::endl;
 
 	trustTable->printTable();
-	BackupTable::getInstance()->printTable();
+
+	BackupTable* backupTable = TestValueGenerator::getDummyBackupTableByTrustTable(trustTable);
+	backupTable->printTable();
+
 
 	RecommendationTable* recomendationTable = TestValueGenerator::getDummyRecommendationTableByTrustTable(trustTable);
 

@@ -15,7 +15,7 @@ private:
     std::string columnSeperator;
 	std::vector<TrustTableEntry> trustTableRecords;
 public:
-        TrustTable();
+    TrustTable();
 	void addTrustTableEntry(TrustTableEntry entry);
 	void removeTrustTableEntry(TrustTableEntry entry);
 	TrustTableEntry getTrustTableEntryByNodeId(Ipv4Address nodeId);
