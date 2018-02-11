@@ -41,7 +41,7 @@
 #include "ns3/ipv4-l3-protocol.h"
 #include <map>
 
-#include "MetaDataToolKit.h"
+#include "MetaDataToolkit.h"
 #include "TrustTable.h"
 #include "RecommendationTable.h"
 #include "BackupTable.h"
