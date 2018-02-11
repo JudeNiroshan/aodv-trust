@@ -1,6 +1,5 @@
 #include "DirTrustCal.h"
-#include "DirTrustHelper.h"
-#include "MetaDataToolKit.h"
+#include "MetaDataToolkit.h"
 #include "TrustTableEntry.h"
 #include <math.h>
 #include <iostream>
@@ -24,17 +23,17 @@ void DirTrustCal::calculateDirectTrust(TrustTable *trustTable)
 
 	//MetaDataToolKit  metaDataTool;
 
-	DirTrustHelper dirTrustHelper;
+	MetaDataToolkit metaDataToolkit;
 
 	for (std::vector<TrustTableEntry>::iterator it = node_entry_vector.begin(); it != node_entry_vector.end(); it++)
 	{
 
-		double rreq = dirTrustHelper.getNoOfRREQ();
-		double rply =  dirTrustHelper.getNoOfRPLY();
-		double hello =  dirTrustHelper.getNoOfHELLO();
-		double err =  dirTrustHelper.getNoOfERR();
-		int sent =  dirTrustHelper.getNoOfSentDataPackets();
-		int received =  dirTrustHelper.getNoOfReceivedDataPackets();
+		double rreq = metaDataToolkit.getNoOfRREQ();
+		double rply =  metaDataToolkit.getNoOfRPLY();
+		double hello =  metaDataToolkit.getNoOfHELLO();
+		double err =  metaDataToolkit.getNoOfERR();
+		int sent =  metaDataToolkit.getNoOfSentDataPackets();
+		int received =  metaDataToolkit.getNoOfReceivedDataPackets();
 
 		/*
 

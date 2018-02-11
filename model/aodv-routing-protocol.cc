@@ -316,7 +316,7 @@ RoutingProtocol::Start ()
 {
     std::cout << "called RoutingProtocol::Start()" << std::endl;
 
-
+/*
 	TrustTable* dirTrustTable = TestValueGenerator::getDummyDirTrustTable();
 	dirTrustTable->printTable();
 
@@ -359,7 +359,7 @@ RoutingProtocol::Start ()
 
 	TrustLevelClassifier classifier;
 	classifier.identifyTrustLevel(trustTable);
-
+*/
 
    /*TrustTable* trust;
    trust = TrustTable::getInstance();
@@ -910,6 +910,9 @@ RoutingProtocol::SendRequest (Ipv4Address dst)
     }
   else
     m_rreqCount++;
+
+  m_metaDataToolkit.incRREQ();
+
   // Create RREQ header
   RreqHeader rreqHeader;
   rreqHeader.SetDst (dst);
@@ -934,6 +937,10 @@ RoutingProtocol::SendRequest (Ipv4Address dst)
                                               /*nextHop=*/ Ipv4Address (), /*lifeTime=*/ Seconds (0));
       newEntry.SetFlag (IN_SEARCH);
       m_routingTable.AddRoute (newEntry);
+
+      //we need to lookup registered destination addresses in device registry
+      //then add to the trust table
+
     }
 
   if (GratuitousReply)
@@ -1875,6 +1882,7 @@ RoutingProtocol::SendRerrMessage (Ptr<Packet> packet, std::vector<Ipv4Address> p
           NS_LOG_LOGIC ("one precursor => unicast RERR to " << toPrecursor.GetDestination () << " from " << toPrecursor.GetInterface ().GetLocal ());
           Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))), &RoutingProtocol::SendTo, this, socket, packet, precursors.front ());
           m_rerrCount++;
+          m_metaDataToolkit.incERR();
         }
       return;
     }
