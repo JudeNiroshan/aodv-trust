@@ -47,6 +47,7 @@ def build(bld):
         'helper/aodv-trust-helper.h',
         'model/TrustTableEntry.h',    
         'model/TrustTable.h',
+        'model/BackupTableEntry.h',
         'model/BackupTable.h',
         'model/NodeEntry.h',
         'model/TestValueGenerator.h',

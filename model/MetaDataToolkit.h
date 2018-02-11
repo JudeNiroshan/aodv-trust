@@ -1,3 +1,4 @@
+#pragma once
 #include "NodeEntry.h"
 
 namespace ns3 {

@@ -171,7 +171,7 @@ private:
   uint16_t m_rerrCount;
 
   /// Object which tracks the data which used for trust based algorithms
-  MetaDataToolKit m_metaDataToolkit;
+  MetaDataToolkit m_metaDataToolkit;
   /// Trust table which contains trust related data for directly connected nodes
   TrustTable m_trustTable;
   /// Recommendation table which contains recommendation data for directly connected nodes
