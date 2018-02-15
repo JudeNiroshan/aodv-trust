@@ -94,7 +94,7 @@ int main (int argc, char **argv)
 
   test.Run ();
   test.Report (std::cout);
-//  test.PrintTble();
+  test.PrintTble();	//prints the routing table
 
   return 0;
 }

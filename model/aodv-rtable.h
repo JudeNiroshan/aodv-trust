@@ -37,6 +37,7 @@
 #include "ns3/timer.h"
 #include "ns3/net-device.h"
 #include "ns3/output-stream-wrapper.h"
+#include "TrustTable.h"
 
 namespace ns3 {
 namespace aodv {
@@ -179,6 +180,8 @@ private:
   bool m_blackListState;
   /// Time for which the node is put into the blacklist
   Time m_blackListTimeout;
+
+
 };
 
 /**
@@ -244,6 +247,10 @@ public:
   bool MarkLinkAsUnidirectional (Ipv4Address neighbor, Time blacklistTimeout);
   /// Print routing table
   void Print (Ptr<OutputStreamWrapper> stream) const;
+
+
+  ///retrieve 1 hop count nodes from routing table				//*****newly added
+  void populateTrustTable(TrustTable *trustTable);
 
 private:
   std::map<Ipv4Address, RoutingTableEntry> m_ipv4AddressEntry;

@@ -48,6 +48,8 @@
 #include "BackupTable.h"
 #include "RecommendationTable.h"
 #include "TrustLevelClassifier.h"
+#include "aodv-rtable.h"
+#include "ns3/aodv-trust-helper.h"
 
 NS_LOG_COMPONENT_DEFINE ("AodvTrustRoutingProtocol");
 
@@ -56,7 +58,7 @@ namespace ns3
 namespace aodv
 {
 NS_OBJECT_ENSURE_REGISTERED (RoutingProtocol);
-
+//
 /// UDP Port for AODV control traffic
 const uint32_t RoutingProtocol::AODV_PORT = 654;
 
@@ -315,6 +317,8 @@ void
 RoutingProtocol::Start ()
 {
     std::cout << "called RoutingProtocol::Start()" << std::endl;
+
+
 
 /*
 	TrustTable* dirTrustTable = TestValueGenerator::getDummyDirTrustTable();
@@ -669,7 +673,7 @@ RoutingProtocol::NotifyInterfaceUp (uint32_t i)
   Ptr<Ipv4L3Protocol> l3 = m_ipv4->GetObject<Ipv4L3Protocol> ();
   if (l3->GetNAddresses (i) > 1)
     {
-      NS_LOG_WARN ("AODV does not work with more then one address per each interface.");
+      NS_LOG_WARN ("AODV does not work with more than one address per each interface.");
     }
   Ipv4InterfaceAddress iface = l3->GetAddress (i, 0);
   if (iface.GetLocal () == Ipv4Address ("127.0.0.1"))
@@ -933,15 +937,23 @@ RoutingProtocol::SendRequest (Ipv4Address dst)
       rreqHeader.SetUnknownSeqno (true);
       Ptr<NetDevice> dev = 0;
       RoutingTableEntry newEntry (/*device=*/ dev, /*dst=*/ dst, /*validSeqNo=*/ false, /*seqno=*/ 0,
-                                              /*iface=*/ Ipv4InterfaceAddress (),/*hop=*/ 0,
+                                              /*iface=*/ Ipv4InterfaceAddress (),/*hop=*/ 1,
                                               /*nextHop=*/ Ipv4Address (), /*lifeTime=*/ Seconds (0));
       newEntry.SetFlag (IN_SEARCH);
       m_routingTable.AddRoute (newEntry);
 
-      //we need to lookup registered destination addresses in device registry
-      //then add to the trust table
-
     }
+
+  //we need to lookup registered destination addresses in device registry
+  //then add to the trust table
+  AodvTrustHelper aodv;
+  Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper> ("aodv-routing_123.txt", std::ios::out);
+  aodv.PrintRoutingTableAllAt (Seconds (8), routingStream);
+
+  m_routingTable.populateTrustTable(&m_trustTable);
+  std::cout << "********************Printing Trust Table***********************" << std::endl;
+  m_trustTable.printTable();
+
 
   if (GratuitousReply)
     rreqHeader.SetGratiousRrep (true);
@@ -1062,6 +1074,17 @@ bool
 RoutingProtocol::UpdateRouteLifeTime (Ipv4Address addr, Time lifetime)
 {
   std::cout << "called RoutingProtocol::UpdateRouteLifeTime" << std::endl;
+/*
+  //we need to lookup registered destination addresses in device registry
+	   //then add to the trust table
+	   AodvTrustHelper aodv;
+	   Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper> ("aodv-routing_123.txt", std::ios::out);
+	   aodv.PrintRoutingTableAllAt (Seconds (8), routingStream);
+
+	   m_routingTable.populateTrustTable(&m_trustTable);
+	   std::cout << "********************Printing Trust Table***********************" << std::endl;
+	   m_trustTable.printTable();
+*/
   NS_LOG_FUNCTION (this << addr << lifetime);
   RoutingTableEntry rt;
   if (m_routingTable.LookupRoute (addr, rt))
@@ -1081,7 +1104,7 @@ RoutingProtocol::UpdateRouteLifeTime (Ipv4Address addr, Time lifetime)
 void
 RoutingProtocol::UpdateRouteToNeighbor (Ipv4Address sender, Ipv4Address receiver)
 {
-  std::cout << "called RoutingProtocol::UpdateRouteToNeighbor" << std::endl;
+  std::cout << "called RoutingProtocol::UpdateRouteToNeighbor " << "current address " << sender << " receiver (neighbor)" << receiver << std::endl;
   NS_LOG_FUNCTION (this << "sender " << sender << " receiver " << receiver);
   RoutingTableEntry toNeighbor;
   if (!m_routingTable.LookupRoute (sender, toNeighbor))
