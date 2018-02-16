@@ -661,6 +661,10 @@ RoutingProtocol::SetIpv4 (Ptr<Ipv4> ipv4)
                                     /*hops=*/ 1, /*next hop=*/ Ipv4Address::GetLoopback (),
                                     /*lifetime=*/ Simulator::GetMaximumSimulationTime ());
   m_routingTable.AddRoute (rt);
+  m_routingTable.populateTrustTable(&m_trustTable);
+  //test print
+  std::cout << "********************Printing Trust Table***********************" << std::endl;
+   m_trustTable.printTable();
 
   Simulator::ScheduleNow (&RoutingProtocol::Start, this);
 }
@@ -695,6 +699,10 @@ RoutingProtocol::NotifyInterfaceUp (uint32_t i)
   RoutingTableEntry rt (/*device=*/ dev, /*dst=*/ iface.GetBroadcast (), /*know seqno=*/ true, /*seqno=*/ 0, /*iface=*/ iface,
                                     /*hops=*/ 1, /*next hop=*/ iface.GetBroadcast (), /*lifetime=*/ Simulator::GetMaximumSimulationTime ());
   m_routingTable.AddRoute (rt);
+  m_routingTable.populateTrustTable(&m_trustTable);
+  //test print
+  std::cout << "********************Printing Trust Table***********************" << std::endl;
+   m_trustTable.printTable();
 
   // Allow neighbor manager use this interface for layer 2 feedback if possible
   Ptr<WifiNetDevice> wifi = dev->GetObject<WifiNetDevice> ();
@@ -779,6 +787,10 @@ RoutingProtocol::NotifyAddAddress (uint32_t i, Ipv4InterfaceAddress address)
                                             /*seqno=*/ 0, /*iface=*/ iface, /*hops=*/ 1,
                                             /*next hop=*/ iface.GetBroadcast (), /*lifetime=*/ Simulator::GetMaximumSimulationTime ());
           m_routingTable.AddRoute (rt);
+          m_routingTable.populateTrustTable(&m_trustTable);
+          //test print
+          std::cout << "********************Printing Trust Table***********************" << std::endl;
+           m_trustTable.printTable();
         }
     }
   else
@@ -816,6 +828,10 @@ RoutingProtocol::NotifyRemoveAddress (uint32_t i, Ipv4InterfaceAddress address)
           RoutingTableEntry rt (/*device=*/ dev, /*dst=*/ iface.GetBroadcast (), /*know seqno=*/ true, /*seqno=*/ 0, /*iface=*/ iface,
                                             /*hops=*/ 1, /*next hop=*/ iface.GetBroadcast (), /*lifetime=*/ Simulator::GetMaximumSimulationTime ());
           m_routingTable.AddRoute (rt);
+          m_routingTable.populateTrustTable(&m_trustTable);
+          //test print
+          std::cout << "********************Printing Trust Table***********************" << std::endl;
+           m_trustTable.printTable();
         }
       if (m_socketAddresses.empty ())
         {
@@ -941,6 +957,10 @@ RoutingProtocol::SendRequest (Ipv4Address dst)
                                               /*nextHop=*/ Ipv4Address (), /*lifeTime=*/ Seconds (0));
       newEntry.SetFlag (IN_SEARCH);
       m_routingTable.AddRoute (newEntry);
+      m_routingTable.populateTrustTable(&m_trustTable);
+      //test print
+      std::cout << "********************Printing Trust Table***********************" << std::endl;
+       m_trustTable.printTable();
 
     }
 
@@ -951,9 +971,6 @@ RoutingProtocol::SendRequest (Ipv4Address dst)
   aodv.PrintRoutingTableAllAt (Seconds (8), routingStream);
 
   m_routingTable.populateTrustTable(&m_trustTable);
-  std::cout << "********************Printing Trust Table***********************" << std::endl;
-  m_trustTable.printTable();
-
 
   if (GratuitousReply)
     rreqHeader.SetGratiousRrep (true);
@@ -1114,6 +1131,10 @@ RoutingProtocol::UpdateRouteToNeighbor (Ipv4Address sender, Ipv4Address receiver
                                               /*iface=*/ m_ipv4->GetAddress (m_ipv4->GetInterfaceForAddress (receiver), 0),
                                               /*hops=*/ 1, /*next hop=*/ sender, /*lifetime=*/ ActiveRouteTimeout);
       m_routingTable.AddRoute (newEntry);
+      m_routingTable.populateTrustTable(&m_trustTable);
+      //test print
+      std::cout << "********************Printing Trust Table***********************" << std::endl;
+       m_trustTable.printTable();
     }
   else
     {
@@ -1187,6 +1208,10 @@ RoutingProtocol::RecvRequest (Ptr<Packet> p, Ipv4Address receiver, Ipv4Address s
                                               /*iface=*/ m_ipv4->GetAddress (m_ipv4->GetInterfaceForAddress (receiver), 0), /*hops=*/ hop,
                                               /*nextHop*/ src, /*timeLife=*/ Time ((2 * NetTraversalTime - 2 * hop * NodeTraversalTime)));
       m_routingTable.AddRoute (newEntry);
+      m_routingTable.populateTrustTable(&m_trustTable);
+      //test print
+      std::cout << "********************Printing Trust Table***********************" << std::endl;
+       m_trustTable.printTable();
     }
   else
     {
@@ -1218,6 +1243,10 @@ RoutingProtocol::RecvRequest (Ptr<Packet> p, Ipv4Address receiver, Ipv4Address s
                                               m_ipv4->GetAddress (m_ipv4->GetInterfaceForAddress (receiver), 0),
                                               1, src, ActiveRouteTimeout);
       m_routingTable.AddRoute (newEntry);
+      m_routingTable.populateTrustTable(&m_trustTable);
+      //test print
+      std::cout << "********************Printing Trust Table***********************" << std::endl;
+       m_trustTable.printTable();
     }
   else
     {
@@ -1462,6 +1491,10 @@ RoutingProtocol::RecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Address sen
       // The forward route for this destination is created if it does not already exist.
       NS_LOG_LOGIC ("add new route");
       m_routingTable.AddRoute (newEntry);
+      m_routingTable.populateTrustTable(&m_trustTable);
+      //test print
+      std::cout << "********************Printing Trust Table***********************" << std::endl;
+       m_trustTable.printTable();
     }
   // Acknowledge receipt of the RREP by sending a RREP-ACK message back
   if (rrepHeader.GetAckRequired ())
@@ -1532,7 +1565,7 @@ RoutingProtocol::RecvReplyAck (Ipv4Address neighbor)
       rt.SetFlag (VALID);
       m_routingTable.Update (rt);
     }
-}
+ }
 
 void
 RoutingProtocol::ProcessHello (RrepHeader const & rrepHeader, Ipv4Address receiver )
@@ -1552,6 +1585,10 @@ RoutingProtocol::ProcessHello (RrepHeader const & rrepHeader, Ipv4Address receiv
                                               /*iface=*/ m_ipv4->GetAddress (m_ipv4->GetInterfaceForAddress (receiver), 0),
                                               /*hop=*/ 1, /*nextHop=*/ rrepHeader.GetDst (), /*lifeTime=*/ rrepHeader.GetLifeTime ());
       m_routingTable.AddRoute (newEntry);
+      m_routingTable.populateTrustTable(&m_trustTable);
+      //test print
+      std::cout << "********************Printing Trust Table***********************" << std::endl;
+       m_trustTable.printTable();
     }
   else
     {

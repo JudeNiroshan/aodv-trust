@@ -94,11 +94,7 @@ int main (int argc, char **argv)
 
   test.Run ();
   test.Report (std::cout);
-<<<<<<< HEAD
   test.PrintTble();	//prints the routing table
-=======
-  test.PrintTble();
->>>>>>> ac4bc53940b0165074ba0766468eff844c690407
 
   return 0;
 }
