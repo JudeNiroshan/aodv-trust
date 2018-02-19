@@ -902,7 +902,7 @@ RoutingProtocol::SendRequest (Ipv4Address dst)
   else
     m_rreqCount++;
 
-  m_metaDataToolkit.incRREQ();
+  m_trustTable.getTrustTableEntryByNodeId(dst)->incRREQ();
 
   // Create RREQ header
   RreqHeader rreqHeader;
@@ -1502,6 +1502,9 @@ RoutingProtocol::RecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Address sen
   packet->AddHeader (tHeader);
   Ptr<Socket> socket = FindSocketWithInterfaceAddress (toOrigin.GetInterface ());
   NS_ASSERT (socket);
+
+  m_trustTable.getTrustTableEntryByNodeId(toDst.GetDestination())->incRPLY();
+
   socket->SendTo (packet, 0, InetSocketAddress (toOrigin.GetNextHop (), AODV_PORT));
 }
 
@@ -1720,6 +1723,8 @@ RoutingProtocol::SendHello ()
         { 
           destination = iface.GetBroadcast ();
         }
+      m_trustTable.getTrustTableEntryByNodeId(destination)->incHELLO();
+
       Time jitter = Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10)));
       Simulator::Schedule (jitter, &RoutingProtocol::SendTo, this , socket, packet, destination);
     }
@@ -1882,7 +1887,7 @@ RoutingProtocol::SendRerrMessage (Ptr<Packet> packet, std::vector<Ipv4Address> p
           NS_LOG_LOGIC ("one precursor => unicast RERR to " << toPrecursor.GetDestination () << " from " << toPrecursor.GetInterface ().GetLocal ());
           Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))), &RoutingProtocol::SendTo, this, socket, packet, precursors.front ());
           m_rerrCount++;
-          m_metaDataToolkit.incERR();
+          m_trustTable.getTrustTableEntryByNodeId(toPrecursor.GetDestination())->incERR();
         }
       return;
     }

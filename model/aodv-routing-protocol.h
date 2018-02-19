@@ -41,7 +41,6 @@
 #include "ns3/ipv4-l3-protocol.h"
 #include <map>
 
-#include "MetaDataToolkit.h"
 #include "TrustTable.h"
 #include "RecommendationTable.h"
 #include "BackupTable.h"
@@ -170,8 +169,6 @@ private:
   /// Number of RERRs used for RERR rate control
   uint16_t m_rerrCount;
 
-  /// Object which tracks the data which used for trust based algorithms
-  MetaDataToolkit m_metaDataToolkit;
   /// Trust table which contains trust related data for directly connected nodes
   TrustTable m_trustTable;
   /// Recommendation table which contains recommendation data for directly connected nodes

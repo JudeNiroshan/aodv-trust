@@ -23,13 +23,14 @@ void TrustTable::removeTrustTableEntry(TrustTableEntry entry)
 	trustTableRecords.pop_back(); //need to change this
 }
 
-TrustTableEntry TrustTable::getTrustTableEntryByNodeId(Ipv4Address nodeId)
+TrustTableEntry* TrustTable::getTrustTableEntryByNodeId(Ipv4Address nodeId)
 {
-	TrustTableEntry entry;
+	TrustTableEntry* entry;
+	entry = new TrustTableEntry();
 	for (std::vector<TrustTableEntry>::iterator it = trustTableRecords.begin(); it != trustTableRecords.end(); it++)
 	{
 		if (it->getDestinationNode() == nodeId) {
-			return *it;
+			return &*it;
 		}
 	}
 
@@ -63,10 +64,10 @@ void TrustTable::setTrustTable(std::vector<TrustTableEntry> newTrustTable)
 void TrustTable::printTable()
 {
 	std::cout << ">>>>>>>>>>>>>> Direct Trust Table <<<<<<<<<<<<<<<" << std::endl;
-	std::cout << "| "<< "Destination Node"<< columnSeperator << "Direct Trust" << columnSeperator << "Indirect Trust" << columnSeperator << "Interactions" << columnSeperator << "Global Trust"<< columnSeperator << "Trust Level" << std::endl;
+	std::cout << "| "<< "Destination Node"<< columnSeperator << "Direct Trust" << columnSeperator << "Indirect Trust" << columnSeperator << "Interactions" << columnSeperator << "Global Trust"<< columnSeperator << "Trust Level" << columnSeperator << "RREQ" << columnSeperator << "RPLY" << columnSeperator << "Hello" << columnSeperator << "ERR" << std::endl;
 	for (std::vector<TrustTableEntry>::iterator it = trustTableRecords.begin(); it != trustTableRecords.end(); it++)
 	{
-		std::cout << "| " << it->getDestinationNode() << "\t\t" << columnSeperator << it->getDirectTrust() << "\t\t" << columnSeperator << it->getIndirectTrust() << "\t\t" << columnSeperator << it->getInteractionCount() << "\t\t"<< columnSeperator << it->getGlobalTrust() << "\t\t" << columnSeperator << it->getTrustLevel() << std::endl;
+		std::cout << "| " << it->getDestinationNode() << "\t" << columnSeperator << it->getDirectTrust() << "\t" << columnSeperator << it->getIndirectTrust() << "\t" << columnSeperator << it->getInteractionCount() << "\t"<< columnSeperator << it->getGlobalTrust() << "\t" << columnSeperator << it->getTrustLevel() << "\t" << columnSeperator << it->getNoOfRREQ() << "\t" << columnSeperator << it->getNoOfRPLY() << "\t" << columnSeperator << it->getNoOfHELLO() << "\t" << columnSeperator << it->getNoOfERR() <<  std::endl;
 	}
 }
 

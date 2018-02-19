@@ -11,6 +11,10 @@ namespace aodv
 
 TrustTableEntry::TrustTableEntry()
 {
+	 this->rreq = 0;
+	 this->rply = 0;
+	 this->hello = 0;
+	 this->err = 0;
 }
 
 void TrustTableEntry::setInteractionCount(int i_count)
@@ -94,6 +98,73 @@ bool TrustTableEntry::getBlacklist()
 {
 	return this->blacklist;
 }
+
+void TrustTableEntry::incRREQ()
+{
+	this->rreq = this->rreq + 1;
+}
+
+void TrustTableEntry::incRPLY()
+{
+	this->rply = this->rply + 1;
+}
+
+void TrustTableEntry::incERR()
+{
+	this->err = this->err + 1;
+}
+
+void TrustTableEntry::incHELLO()
+{
+	this->hello = this->hello + 1;
+}
+
+void TrustTableEntry::incNDF()
+{
+	this->noOfDataPacketsForward = this->noOfDataPacketsForward + 1;
+}
+
+void TrustTableEntry::incNDR()
+{
+	this->noOfDataPacketsReceived = this->noOfDataPacketsReceived + 1;
+}
+
+int TrustTableEntry::getNoOfRREQ()
+{
+	return this->rreq;
+	//return 1;
+}
+
+int TrustTableEntry::getNoOfRPLY()
+{
+	return this->rply;
+	//return 1;
+}
+
+int TrustTableEntry::getNoOfHELLO()
+{
+	return this->hello;
+	//return 1;
+}
+
+int TrustTableEntry::getNoOfERR()
+{
+	return this->err;
+	//return 1;
+}
+
+int TrustTableEntry::getNoOfSentDataPackets()
+{
+	return this->noOfDataPacketsForward;
+	//return 2;
+}
+
+int TrustTableEntry::getNoOfReceivedDataPackets()
+{
+	return this->noOfDataPacketsReceived;
+	//return 2;
+}
+
 
 TrustTableEntry::~TrustTableEntry()
 {

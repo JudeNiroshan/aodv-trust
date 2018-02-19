@@ -18,6 +18,15 @@ private:
 	int interaction_count;
 	int trustLevel;
 	bool blacklist;
+	int rreq;
+	int rply;
+	int hello;
+	int err;
+	int noOfDataPacketsForward;
+	int noOfDataPacketsReceived;
+	int noOfControlPackets;
+	int noOfDataPackets;
+
 public:
 	TrustTableEntry();
 	void setInteractionCount(int i_count);
@@ -35,6 +44,19 @@ public:
 	int getTrustLevel();
 	void setBlacklist(bool blacklist);
 	bool getBlacklist();
+	void incRREQ();
+	void incRPLY();
+	void incERR();
+	void incHELLO();
+	void incNDF();
+	void incNDR();
+	int getNoOfRREQ();
+	int getNoOfRPLY();
+	int getNoOfHELLO();
+	int getNoOfERR();
+	int getNoOfSentDataPackets();
+	int getNoOfReceivedDataPackets();
+	Ipv4Address getAllNeiNodes();
 	~TrustTableEntry();
 };
 
