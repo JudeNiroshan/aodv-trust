@@ -248,10 +248,6 @@ public:
   /// Print routing table
   void Print (Ptr<OutputStreamWrapper> stream) const;
 
-
-  ///retrieve 1 hop count nodes from routing table				//*****newly added
-  void populateTrustTable(TrustTable *trustTable);
-
 private:
   std::map<Ipv4Address, RoutingTableEntry> m_ipv4AddressEntry;
   /// Deletion time for invalid routes

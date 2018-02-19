@@ -448,38 +448,5 @@ RoutingTable::Print (Ptr<OutputStreamWrapper> stream) const
     }
   *stream->GetStream () << "\n";
 }
-
-
-//*****newly added
-
-void
-RoutingTable::populateTrustTable(TrustTable *trustTable)
-{
-  NS_LOG_FUNCTION (this);
-	std::vector<TrustTableEntry> &existingTrustTableEntries = trustTable->getTrustTableEntries();
-
-
-  int count = 0;
-
-  for (std::map<Ipv4Address, RoutingTableEntry>::const_iterator i =
-         m_ipv4AddressEntry.begin (); i != m_ipv4AddressEntry.end (); ++i)
-    {
-	  for (std::vector<TrustTableEntry>::iterator it = existingTrustTableEntries.begin(); it != existingTrustTableEntries.end(); it++)
-	  {
-		  if(i->second.GetDestination() == it->getDestinationNode())
-		  {count++;}
-	  }
-
-      if (i->second.GetHop() == 1 && (i->second.GetFlag() == VALID) && count == 0)
-        {
-    	  TrustTableEntry trustTableEntry;
-
-    	  trustTableEntry.setDestinationNode(i->second.GetDestination());
-    	  trustTable->addTrustTableEntry(trustTableEntry);
-        }
-    }
-}
-
-
 }
 }

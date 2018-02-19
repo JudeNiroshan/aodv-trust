@@ -49,6 +49,7 @@
 #include "RecommendationTable.h"
 #include "TrustLevelClassifier.h"
 #include "aodv-rtable.h"
+#include "TrustTableEntry.h"
 #include "ns3/aodv-trust-helper.h"
 
 NS_LOG_COMPONENT_DEFINE ("AodvTrustRoutingProtocol");
@@ -936,8 +937,6 @@ RoutingProtocol::SendRequest (Ipv4Address dst)
   Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper> ("aodv-routing_123.txt", std::ios::out);
   aodv.PrintRoutingTableAllAt (Seconds (8), routingStream);
 
-  m_routingTable.populateTrustTable(&m_trustTable);
-
   if (GratuitousReply)
     rreqHeader.SetGratiousRrep (true);
   if (DestinationOnly)
@@ -1099,9 +1098,25 @@ RoutingProtocol::UpdateRouteToNeighbor (Ipv4Address sender, Ipv4Address receiver
           m_routingTable.Update (newEntry);
         }
     }
-  m_routingTable.populateTrustTable(&m_trustTable);
-  std::cout << "\n" << std::endl;
+  TrustTableEntry trustTableEntry;
+  trustTableEntry.setDestinationNode(sender);
+  int count = 0;
+
+  std::vector<TrustTableEntry> &existingTrustTableEntries = m_trustTable.getTrustTableEntries();
+
+  for (std::vector<TrustTableEntry>::iterator it = existingTrustTableEntries.begin(); it != existingTrustTableEntries.end(); it++)
+  {
+	  if(it->getDestinationNode() == sender)
+	  {count++;}
+  }
+
+  if(count == 0)
+  {
+	  m_trustTable.addTrustTableEntry(trustTableEntry);
+  }
+
   m_trustTable.printTable();
+  std::cout << "\n" << std::endl;
 
 }
 
