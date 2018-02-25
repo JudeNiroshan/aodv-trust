@@ -1336,7 +1336,8 @@ RoutingProtocol::SendReply (RreqHeader const & rreqHeader, RoutingTableEntry con
 		  it->incRPLY();
 	  }
   }
-  std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$RPLY$$$$$$$$$$$$$$$" << std::endl;
+
+  std::cout << "*****SendReply called****" << std::endl;
   m_trustTable.printTable();
     std::cout << "\n" << std::endl;
 
