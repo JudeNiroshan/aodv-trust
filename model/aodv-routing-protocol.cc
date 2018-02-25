@@ -930,16 +930,14 @@ RoutingProtocol::SendRequest (Ipv4Address dst)
   trustTableEntry.setDestinationNode(dst);
   int count = 0;
 
-  std::vector<TrustTableEntry> &existingTrustTableEntries = m_trustTable.getTrustTableEntries();
 
-  for (std::vector<TrustTableEntry>::iterator it = existingTrustTableEntries.begin(); it != existingTrustTableEntries.end(); it++)
+  for (std::vector<TrustTableEntry>::iterator it = m_trustTable.getTrustTableEntries().begin(); it != m_trustTable.getTrustTableEntries().end(); it++)
   {
 	  if(it->getDestinationNode() == dst)
 	  {count++;
 	  trustTableEntry = *it;
 	  }
   }
-
 
   //print the routing table
   AodvTrustHelper aodv;
@@ -1329,6 +1327,18 @@ RoutingProtocol::SendReply (RreqHeader const & rreqHeader, RoutingTableEntry con
   Ptr<Socket> socket = FindSocketWithInterfaceAddress (toOrigin.GetInterface ());
   NS_ASSERT (socket);
   socket->SendTo (packet, 0, InetSocketAddress (toOrigin.GetNextHop (), AODV_PORT));
+
+
+  for (std::vector<TrustTableEntry>::iterator it = m_trustTable.getTrustTableEntries().begin(); it != m_trustTable.getTrustTableEntries().end(); it++)
+   {
+	  if(it->getDestinationNode() == toOrigin.GetDestination ())
+	  {
+		  it->incRPLY();
+	  }
+  }
+  std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$RPLY$$$$$$$$$$$$$$$" << std::endl;
+  m_trustTable.printTable();
+    std::cout << "\n" << std::endl;
 
 }
 
@@ -1745,7 +1755,13 @@ RoutingProtocol::SendHello ()
         { 
           destination = iface.GetBroadcast ();
         }
-      m_trustTable.incrementAllHelloPacketsCount();
+
+      TrustTableEntry* trustTableEntry = m_trustTable.getTrustTableEntryByNodeId(destination);
+      if(trustTableEntry != 0)
+      {
+    	  trustTableEntry->incHELLO();
+      }
+
 
       Time jitter = Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10)));
       Simulator::Schedule (jitter, &RoutingProtocol::SendTo, this , socket, packet, destination);
