@@ -25,8 +25,7 @@ void TrustTable::removeTrustTableEntry(TrustTableEntry entry)
 
 TrustTableEntry* TrustTable::getTrustTableEntryByNodeId(Ipv4Address nodeId)
 {
-	TrustTableEntry* entry;
-	entry = new TrustTableEntry();
+	TrustTableEntry* entry = 0;
 	for (std::vector<TrustTableEntry>::iterator it = trustTableRecords.begin(); it != trustTableRecords.end(); it++)
 	{
 		if (it->getDestinationNode() == nodeId) {

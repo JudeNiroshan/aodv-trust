@@ -902,8 +902,6 @@ RoutingProtocol::SendRequest (Ipv4Address dst)
   else
     m_rreqCount++;
 
-  m_trustTable.getTrustTableEntryByNodeId(dst)->incRREQ();
-
   // Create RREQ header
   RreqHeader rreqHeader;
   rreqHeader.SetDst (dst);
@@ -931,8 +929,20 @@ RoutingProtocol::SendRequest (Ipv4Address dst)
 
     }
 
-  //we need to lookup registered destination addresses in device registry
-  //then add to the trust table
+  TrustTableEntry trustTableEntry;
+  trustTableEntry.setDestinationNode(dst);
+  int count = 0;
+
+  std::vector<TrustTableEntry> &existingTrustTableEntries = m_trustTable.getTrustTableEntries();
+
+  for (std::vector<TrustTableEntry>::iterator it = existingTrustTableEntries.begin(); it != existingTrustTableEntries.end(); it++)
+  {
+	  if(it->getDestinationNode() == dst)
+	  {count++;}
+  }
+
+
+  //print the routing table
   AodvTrustHelper aodv;
   Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper> ("aodv-routing_123.txt", std::ios::out);
   aodv.PrintRoutingTableAllAt (Seconds (8), routingStream);
@@ -977,6 +987,16 @@ RoutingProtocol::SendRequest (Ipv4Address dst)
       Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))), &RoutingProtocol::SendTo, this, socket, packet, destination); 
     }
   ScheduleRreqRetry (dst);
+
+  trustTableEntry.incRREQ();
+
+  if(count == 0)
+  {
+	 m_trustTable.addTrustTableEntry(trustTableEntry);
+  }
+  m_trustTable.printTable();
+   std::cout << "\n" << std::endl;
+
 }
 
 void
@@ -1081,7 +1101,6 @@ RoutingProtocol::UpdateRouteToNeighbor (Ipv4Address sender, Ipv4Address receiver
                                               /*iface=*/ m_ipv4->GetAddress (m_ipv4->GetInterfaceForAddress (receiver), 0),
                                               /*hops=*/ 1, /*next hop=*/ sender, /*lifetime=*/ ActiveRouteTimeout);
       m_routingTable.AddRoute (newEntry);
-
     }
   else
     {
@@ -1112,7 +1131,7 @@ RoutingProtocol::UpdateRouteToNeighbor (Ipv4Address sender, Ipv4Address receiver
 
   if(count == 0)
   {
-	  m_trustTable.addTrustTableEntry(trustTableEntry);
+	 m_trustTable.addTrustTableEntry(trustTableEntry);
   }
 
   m_trustTable.printTable();
@@ -1194,7 +1213,6 @@ RoutingProtocol::RecvRequest (Ptr<Packet> p, Ipv4Address receiver, Ipv4Address s
       m_routingTable.Update (toOrigin);
       //m_nb.Update (src, Time (AllowedHelloLoss * HelloInterval));
     }
-
 
   RoutingTableEntry toNeighbor;
   if (!m_routingTable.LookupRoute (src, toNeighbor))
@@ -1503,7 +1521,11 @@ RoutingProtocol::RecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Address sen
   Ptr<Socket> socket = FindSocketWithInterfaceAddress (toOrigin.GetInterface ());
   NS_ASSERT (socket);
 
-  m_trustTable.getTrustTableEntryByNodeId(toDst.GetDestination())->incRPLY();
+  TrustTableEntry* trustTableEntry = m_trustTable.getTrustTableEntryByNodeId(toDst.GetDestination());
+  if(trustTableEntry != 0)
+  {
+	  trustTableEntry->incRPLY();
+  }
 
   socket->SendTo (packet, 0, InetSocketAddress (toOrigin.GetNextHop (), AODV_PORT));
 }
@@ -1723,7 +1745,13 @@ RoutingProtocol::SendHello ()
         { 
           destination = iface.GetBroadcast ();
         }
-      m_trustTable.getTrustTableEntryByNodeId(destination)->incHELLO();
+
+      TrustTableEntry* trustTableEntry = m_trustTable.getTrustTableEntryByNodeId(destination);
+      if(trustTableEntry != 0)
+      {
+    	  trustTableEntry->incHELLO();
+      }
+
 
       Time jitter = Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10)));
       Simulator::Schedule (jitter, &RoutingProtocol::SendTo, this , socket, packet, destination);
@@ -1887,7 +1915,13 @@ RoutingProtocol::SendRerrMessage (Ptr<Packet> packet, std::vector<Ipv4Address> p
           NS_LOG_LOGIC ("one precursor => unicast RERR to " << toPrecursor.GetDestination () << " from " << toPrecursor.GetInterface ().GetLocal ());
           Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))), &RoutingProtocol::SendTo, this, socket, packet, precursors.front ());
           m_rerrCount++;
-          m_trustTable.getTrustTableEntryByNodeId(toPrecursor.GetDestination())->incERR();
+
+          TrustTableEntry* trustTableEntry = m_trustTable.getTrustTableEntryByNodeId(toPrecursor.GetDestination());
+          if(trustTableEntry != 0)
+          {
+        	  trustTableEntry->incERR();
+          }
+
         }
       return;
     }
