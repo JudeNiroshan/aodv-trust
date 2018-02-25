@@ -28,6 +28,7 @@
 #include "ns3/point-to-point-module.h"
 #include "ns3/wifi-module.h" 
 #include "ns3/v4ping-helper.h"
+#include "ns3/on-off-helper.h"
 #include <iostream>
 #include <cmath>
 
@@ -235,9 +236,21 @@ AodvExample::InstallApplications ()
   V4PingHelper ping (interfaces.GetAddress (size - 1));
   ping.SetAttribute ("Verbose", BooleanValue (true));
 
+/*
   ApplicationContainer p = ping.Install (nodes.Get (0));
   p.Start (Seconds (0));
   p.Stop (Seconds (totalTime) - Seconds (0.001));
+*/
+
+  uint16_t port = 9;   // Discard port (RFC 863)
+
+  OnOffHelper onoff ("ns3::UdpSocketFactory",
+                     InetSocketAddress (interfaces.GetAddress (size - 1), port));
+  onoff.SetConstantRate (DataRate ("448kb/s"));
+
+  ApplicationContainer apps = onoff.Install (nodes.Get (0));
+  apps.Start (Seconds (1.0));
+  apps.Stop (Seconds (10.0));
 
   // move node away
   Ptr<Node> node = nodes.Get (size/2);

@@ -15,6 +15,8 @@ TrustTableEntry::TrustTableEntry()
 	 this->rply = 0;
 	 this->hello = 0;
 	 this->err = 0;
+	 this->noOfDataPacketsForward = 0;
+	 this->noOfDataPacketsReceived = 0;
 }
 
 void TrustTableEntry::setInteractionCount(int i_count)
@@ -128,6 +130,17 @@ void TrustTableEntry::incNDR()
 {
 	this->noOfDataPacketsReceived = this->noOfDataPacketsReceived + 1;
 }
+
+void TrustTableEntry::incDataPacketsForward()
+{
+	this->noOfDataPacketsForward = this->noOfDataPacketsForward + 1;
+}
+
+void TrustTableEntry::incDataPacketsReceived()
+{
+	this->noOfDataPacketsReceived = this->noOfDataPacketsReceived + 1;
+}
+
 
 int TrustTableEntry::getNoOfRREQ()
 {

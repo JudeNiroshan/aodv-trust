@@ -50,6 +50,8 @@ public:
 	void incHELLO();
 	void incNDF();
 	void incNDR();
+	void incDataPacketsForward();
+	void incDataPacketsReceived();
 	int getNoOfRREQ();
 	int getNoOfRPLY();
 	int getNoOfHELLO();

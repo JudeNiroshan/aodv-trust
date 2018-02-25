@@ -31,23 +31,6 @@ void DirTrustCal::calculateDirectTrust(TrustTable *trustTable)
 		int sent =  it->getNoOfSentDataPackets();
 		int received =  it->getNoOfReceivedDataPackets();
 
-		/*
-
-		double rreq = dirTrustHelper.getNoOfRREQ(*it->getDestinationNode());
-		double rply =  dirTrustHelper.getNoOfRPLY(*it->getDestinationNode());
-		double hello =  dirTrustHelper.getNoOfHELLO(*it->getDestinationNode());
-		double err =  dirTrustHelper.getNoOfERR(*it->getDestinationNode());
-		int sent =  dirTrustHelper.getNoOfSentDataPackets(*it->getDestinationNode());
-		int received =  dirTrustHelper.getNoOfReceivedDataPackets(*it->getDestinationNode());
-		 *
-
-		int rreq = metaDataTool.getRREQ();
-		int rply = metaDataTool.getRPLY();
-		int hello = metaDataTool.getHELLO();
-		int err = metaDataTool.getERR();
-		int sent = metaDataTool.getNDF();
-		int received = metaDataTool.getNDR();
-*/
 
 		double cp = (rreq + rply + hello + err) / 4;
 
@@ -62,8 +45,6 @@ void DirTrustCal::calculateDirectTrust(TrustTable *trustTable)
 		double finaldt = calculateFinalDT(dt);
 
 		it->setDirectTrust(finaldt);
-
-
 
 	}
 

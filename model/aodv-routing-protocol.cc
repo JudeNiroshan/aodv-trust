@@ -412,6 +412,19 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
         }
       UpdateRouteLifeTime (dst, ActiveRouteTimeout);
       UpdateRouteLifeTime (route->GetGateway (), ActiveRouteTimeout);
+
+      TrustTableEntry trustTableEntry;
+      trustTableEntry.setDestinationNode(dst);
+
+      for (std::vector<TrustTableEntry>::iterator it = m_trustTable.getTrustTableEntries().begin(); it != m_trustTable.getTrustTableEntries().end(); it++)
+      {
+    	  if(it->getDestinationNode() == dst)
+    	  {
+    	  trustTableEntry.incDataPacketsForward();
+    	  }
+      }
+      m_trustTable.printTable();
+      std::cout << "recieved** \n" << std::endl;
       return route;
     }
 
@@ -991,8 +1004,6 @@ RoutingProtocol::SendRequest (Ipv4Address dst)
   {
 	 m_trustTable.addTrustTableEntry(trustTableEntry);
   }
-  m_trustTable.printTable();
-   std::cout << "\n" << std::endl;
 
 }
 
@@ -1335,10 +1346,6 @@ RoutingProtocol::SendReply (RreqHeader const & rreqHeader, RoutingTableEntry con
 		  it->incRPLY();
 	  }
   }
-
-  std::cout << "*****SendReply called****" << std::endl;
-  m_trustTable.printTable();
-    std::cout << "\n" << std::endl;
 
 }
 
