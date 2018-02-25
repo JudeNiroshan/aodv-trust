@@ -22,6 +22,7 @@ public:
 	std::vector<TrustTableEntry> getBlacklistedTrustTableEntries();
 	std::vector<TrustTableEntry>& getTrustTableEntries();
 	void setTrustTable(std::vector<TrustTableEntry> newTrustTable);
+	void incrementAllHelloPacketsCount();
 	void printTable();
 	~TrustTable();
 };

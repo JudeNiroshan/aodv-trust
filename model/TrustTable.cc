@@ -70,6 +70,13 @@ void TrustTable::printTable()
 	}
 }
 
+void TrustTable::incrementAllHelloPacketsCount() {
+
+	for (std::vector<TrustTableEntry>::iterator it = trustTableRecords.begin(); it != trustTableRecords.end(); it++)
+	{
+		it->incHELLO();
+	}
+}
 
 TrustTable::~TrustTable()
 {

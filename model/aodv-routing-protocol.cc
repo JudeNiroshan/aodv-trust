@@ -1745,13 +1745,7 @@ RoutingProtocol::SendHello ()
         { 
           destination = iface.GetBroadcast ();
         }
-
-      TrustTableEntry* trustTableEntry = m_trustTable.getTrustTableEntryByNodeId(destination);
-      if(trustTableEntry != 0)
-      {
-    	  trustTableEntry->incHELLO();
-      }
-
+      m_trustTable.incrementAllHelloPacketsCount();
 
       Time jitter = Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10)));
       Simulator::Schedule (jitter, &RoutingProtocol::SendTo, this , socket, packet, destination);
