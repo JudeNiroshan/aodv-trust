@@ -314,9 +314,6 @@ RoutingProtocol::AssignStreams (int64_t stream)
 void
 RoutingProtocol::Start ()
 {
-
-
-
 /*
 	TrustTable* dirTrustTable = TestValueGenerator::getDummyDirTrustTable();
 	dirTrustTable->printTable();
@@ -938,7 +935,9 @@ RoutingProtocol::SendRequest (Ipv4Address dst)
   for (std::vector<TrustTableEntry>::iterator it = existingTrustTableEntries.begin(); it != existingTrustTableEntries.end(); it++)
   {
 	  if(it->getDestinationNode() == dst)
-	  {count++;}
+	  {count++;
+	  trustTableEntry = *it;
+	  }
   }
 
 
