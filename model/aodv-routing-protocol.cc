@@ -1304,7 +1304,6 @@ RoutingProtocol::RecvRequest (Ptr<Packet> p, Ipv4Address receiver, Ipv4Address s
         }
       m_lastBcastTime = Simulator::Now ();
       Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))), &RoutingProtocol::SendTo, this, socket, packet, destination); 
-
     }
 }
 
@@ -1587,6 +1586,7 @@ RoutingProtocol::ProcessHello (RrepHeader const & rrepHeader, Ipv4Address receiv
     {
       m_nb.Update (rrepHeader.GetDst (), Time (AllowedHelloLoss * HelloInterval));
     }
+  m_trustTable.incrementAllHelloPacketsCount();
 }
 
 void
@@ -1928,10 +1928,7 @@ RoutingProtocol::SendRerrMessage (Ptr<Packet> packet, std::vector<Ipv4Address> p
           m_rerrCount++;
 
           TrustTableEntry* trustTableEntry = m_trustTable.getTrustTableEntryByNodeId(toPrecursor.GetDestination());
-          if(trustTableEntry != 0)
-          {
-        	  trustTableEntry->incERR();
-          }
+       	  trustTableEntry->incERR();
 
         }
       return;
