@@ -18,6 +18,7 @@ namespace aodv
 * Returns:   0
 * Parameter:
 */
+/*
 int main()
 {
 	TrustTable* dirTrustTable = TestValueGenerator::getDummyDirTrustTable();
@@ -65,6 +66,7 @@ int main()
 
 	return 0;
 }
+*/
 
 IndTrustCal::IndTrustCal()
 {

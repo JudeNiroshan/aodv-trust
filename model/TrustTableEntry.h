@@ -50,6 +50,7 @@ public:
 	void incHELLO();
 	void incNDF();
 	void incNDR();
+	void incInteractionCount();
 	int getNoOfRREQ();
 	int getNoOfRPLY();
 	int getNoOfHELLO();
