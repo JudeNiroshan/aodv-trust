@@ -131,17 +131,6 @@ void TrustTableEntry::incNDR()
 	this->noOfDataPacketsReceived = this->noOfDataPacketsReceived + 1;
 }
 
-void TrustTableEntry::incDataPacketsForward()
-{
-	this->noOfDataPacketsForward = this->noOfDataPacketsForward + 1;
-}
-
-void TrustTableEntry::incDataPacketsReceived()
-{
-	this->noOfDataPacketsReceived = this->noOfDataPacketsReceived + 1;
-}
-
-
 int TrustTableEntry::getNoOfRREQ()
 {
 	return this->rreq;
