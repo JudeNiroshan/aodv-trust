@@ -422,7 +422,6 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
        }
 
       m_trustTable.printTable();
-      std::cout<<"forward here" << std::endl;
 
       return route;
     }
@@ -575,6 +574,17 @@ RoutingProtocol::RouteInput (Ptr<const Packet> p, const Ipv4Header &header,
           NS_LOG_ERROR ("Unable to deliver packet locally due to null callback " << p->GetUid () << " from " << origin);
           ecb (p, header, Socket::ERROR_NOROUTETOHOST);
         }
+
+      for (std::vector<TrustTableEntry>::iterator it = m_trustTable.getTrustTableEntries().begin(); it != m_trustTable.getTrustTableEntries().end(); it++)
+       {
+     	  if(it->getDestinationNode() == origin)
+     	  {
+     	  it->incNDR();
+     	  }
+       }
+      m_trustTable.printTable();
+      std::cout<<"check receive" << std::endl;
+
       return true;
     }
 
