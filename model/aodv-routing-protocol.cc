@@ -420,8 +420,24 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
      	  it->incNDF();
      	  }
        }
+//direct trust calculation
+   	DirTrustCal dirCalculator;
+    dirCalculator.calculateDirectTrust(&m_trustTable);
 
-      m_trustTable.printTable();
+ //indirect trust calculation
+	IndTrustCal indTrustCal;
+	indTrustCal.setTrustTable(&m_trustTable);
+	std::vector<TrustTableEntry>& node_entry_vector = m_trustTable.getTrustTableEntries();
+
+	for (std::vector<TrustTableEntry>::iterator it = node_entry_vector.begin(); it != node_entry_vector.end(); it++)
+	{
+		double ind_trust_value = indTrustCal.calculateIndirectTrust(*it);
+		it->updateIndirectTrust(ind_trust_value);
+		it->calculateGlobalTrust();
+		//TODO: inside above calculateGlobalTrust() need to update backupTable.
+	}
+	std::cout << "After the trust calculation process..." << std::endl;
+	m_trustTable.printTable();
 
       return route;
     }
@@ -582,8 +598,6 @@ RoutingProtocol::RouteInput (Ptr<const Packet> p, const Ipv4Header &header,
      	  it->incNDR();
      	  }
        }
-      m_trustTable.printTable();
-      std::cout<<"check receive" << std::endl;
 
       return true;
     }
@@ -1150,9 +1164,6 @@ RoutingProtocol::UpdateRouteToNeighbor (Ipv4Address sender, Ipv4Address receiver
   {
 	 m_trustTable.addTrustTableEntry(trustTableEntry);
   }
-
-  m_trustTable.printTable();
-  std::cout << "\n" << std::endl;
 
 }
 

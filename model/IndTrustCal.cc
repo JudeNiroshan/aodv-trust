@@ -26,9 +26,7 @@ int main()
 	//identifyTrustLevel();
 	std::cout << "--After calculating direct trust--" << std::endl;
 
-	DirTrustCal dirCalculator;
-	dirCalculator.calculateDirectTrust(dirTrustTable);
-	dirTrustTable->printTable();
+
 
 	std::cout << "-----------------------------------" << std::endl;
 
@@ -48,7 +46,6 @@ int main()
 
 	}
 	std::cout << "After the calculation process..." << std::endl;
-
 	trustTable->printTable();
 
 	BackupTable* backupTable = TestValueGenerator::getDummyBackupTableByTrustTable(trustTable);
@@ -63,21 +60,11 @@ int main()
 	TrustLevelClassifier classifier;
 	classifier.identifyTrustLevel(trustTable);
 
-//	std::vector<RecommendationTableEntry>& rec_entry_vector = recomendationTable->getRecommendationTableEntries();
-
-	/*
-	for (RecommendationTableEntry& node : rec_entry_vector)
-	{
-
-	}*/
 	int pause;
 	std::cin >> pause;
 
 	return 0;
 }
-
-
-
 
 IndTrustCal::IndTrustCal()
 {
