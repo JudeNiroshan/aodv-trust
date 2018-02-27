@@ -29,7 +29,6 @@ private:
 
 public:
 	TrustTableEntry();
-	void setInteractionCount(int i_count);
 	int getInteractionCount();
 	void setDestinationNode(Ipv4Address node);
 	Ipv4Address getDestinationNode();

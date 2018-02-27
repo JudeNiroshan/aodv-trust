@@ -18,7 +18,7 @@ class RecommendationTableEntry
 private:
 
 	Ipv4Address neighborNodeId;
-	std::vector<std::string> recommendingNodesList;
+	Ipv4Address recommendingNodesList;
 	double maturityLevel;
 	bool blackList;
 	double recommendationValue;
@@ -26,7 +26,7 @@ private:
 public:
 	Ipv4Address getneighborNodeId();
 	void setNeighborNodeId(Ipv4Address neighborNodeId);
-	std::vector<std::string> getRecommendingNodesList();
+	Ipv4Address getRecommendingNodes();
 	double getrecValue();
 	void setRecValue(double recommendationValue);
 	int getMaturityLevel();

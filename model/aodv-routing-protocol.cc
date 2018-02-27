@@ -51,6 +51,7 @@
 #include "aodv-rtable.h"
 #include "TrustTableEntry.h"
 #include "ns3/aodv-trust-helper.h"
+#include "aodv-packet.h"
 
 NS_LOG_COMPONENT_DEFINE ("AodvTrustRoutingProtocol");
 
@@ -420,6 +421,7 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
      	  it->incNDF();
      	  }
        }
+
 //direct trust calculation
    	DirTrustCal dirCalculator;
     dirCalculator.calculateDirectTrust(&m_trustTable);
@@ -436,8 +438,6 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
 		it->calculateGlobalTrust();
 		//TODO: inside above calculateGlobalTrust() need to update backupTable.
 	}
-	std::cout << "After the trust calculation process..." << std::endl;
-	m_trustTable.printTable();
 
       return route;
     }
@@ -1148,9 +1148,15 @@ RoutingProtocol::UpdateRouteToNeighbor (Ipv4Address sender, Ipv4Address receiver
           m_routingTable.Update (newEntry);
         }
     }
+  IndTrustCal indTrustCal;
+
   TrustTableEntry trustTableEntry;
   trustTableEntry.setDestinationNode(sender);
   int count = 0;
+
+  // Create TRR header
+  TRRHeader trrHeader;
+  trrHeader.SetDst (receiver);
 
   std::vector<TrustTableEntry> &existingTrustTableEntries = m_trustTable.getTrustTableEntries();
 
@@ -1163,7 +1169,31 @@ RoutingProtocol::UpdateRouteToNeighbor (Ipv4Address sender, Ipv4Address receiver
   if(count == 0)
   {
 	 m_trustTable.addTrustTableEntry(trustTableEntry);
+	  trrHeader.GetGT(trustTableEntry);
+	  trrHeader.GetDT(trustTableEntry);
   }
+
+  //populate recommendation table
+  RecommendationTableEntry recommendationTableEntry;
+  recommendationTableEntry.setNeighborNodeId(sender);
+  int recCount = 0;
+
+  for (std::vector<RecommendationTableEntry>::iterator it = m_recommendationTable.getRecommendationTableEntries().begin(); it != m_recommendationTable.getRecommendationTableEntries().end(); it++)
+  {
+	  if(it->getneighborNodeId() == sender) //have to add another condition here to check if the recommending node repeats
+	  {
+	//	  it->setMaturityLevel(indTrustCal.calculateMaturityLevel(trustTableEntry));
+		  recCount++;
+	  }
+  }
+
+  if(recCount == 0)
+  {
+	 m_recommendationTable.addRecommendationTableEntry(recommendationTableEntry);
+  }
+  std::cout << "\n Printing recommendations table" << std::endl;
+  m_recommendationTable.printTable();
+  m_trustTable.printTable();
 
 }
 

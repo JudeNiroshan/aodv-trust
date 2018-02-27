@@ -17,11 +17,7 @@ TrustTableEntry::TrustTableEntry()
 	 this->err = 0;
 	 this->noOfDataPacketsForward = 0;
 	 this->noOfDataPacketsReceived = 0;
-}
-
-void TrustTableEntry::setInteractionCount(int i_count)
-{
-	this->interaction_count = i_count;
+	 this->interaction_count = 0;
 }
 
 int TrustTableEntry::getInteractionCount()
@@ -104,43 +100,47 @@ bool TrustTableEntry::getBlacklist()
 void TrustTableEntry::incRREQ()
 {
 	this->rreq = this->rreq + 1;
+	this->interaction_count = this->interaction_count + 1;
 }
 
 void TrustTableEntry::incRPLY()
 {
 	this->rply = this->rply + 1;
+	this->interaction_count = this->interaction_count + 1;
 }
 
 void TrustTableEntry::incERR()
 {
 	this->err = this->err + 1;
+	this->interaction_count = this->interaction_count + 1;
 }
 
 void TrustTableEntry::incHELLO()
 {
 	this->hello = this->hello + 1;
+	this->interaction_count = this->interaction_count + 1;
 }
 
 void TrustTableEntry::incNDF()
 {
 	this->noOfDataPacketsForward = this->noOfDataPacketsForward + 1;
+	this->interaction_count = this->interaction_count + 1;
 }
 
 void TrustTableEntry::incNDR()
 {
 	this->noOfDataPacketsReceived = this->noOfDataPacketsReceived + 1;
+	this->interaction_count = this->interaction_count + 1;
 }
 
 int TrustTableEntry::getNoOfRREQ()
 {
 	return this->rreq;
-	//return 1;
 }
 
 int TrustTableEntry::getNoOfRPLY()
 {
 	return this->rply;
-	//return 1;
 }
 
 int TrustTableEntry::getNoOfHELLO()

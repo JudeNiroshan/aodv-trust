@@ -55,18 +55,12 @@ void RecommendationTable::setRecommendationTable(std::vector<RecommendationTable
 
 void RecommendationTable::printTable()
 {
-	//cout << "| " << "Neighbor Node" << columnSeperator << "Recommending Node" << columnSeperator << "Matuarity Level" << columnSeperator << "Blacklist" << endl;
+	std::cout << "| " << "Neighbor Node" << columnSeperator << "Recommending Nodes" << columnSeperator << "Recommending Value" << columnSeperator << "Matuarity Level" << columnSeperator << "Blacklist" << std::endl;
 
-	//for (RecommendationTableEntry &node : recommendationTableRecords) {
-	//cout << "| " << "" << "\t\t" << columnSeperator << "" << "\t\t" << columnSeperator << "" << "\t\t" << columnSeperator << "" << "\t\t" << columnSeperator << endl;
-	//}
-
-	std::cout << "| " << "Neighbor Node" << columnSeperator << "Matuarity Level" << std::endl;
 	for (std::vector<RecommendationTableEntry>::iterator it = recommendationTableRecords.begin(); it != recommendationTableRecords.end(); it++)
 	{
-		std::cout << "| " << it->getneighborNodeId() << "\t\t" <<columnSeperator << it->getMaturityLevel() << "\t\t" << columnSeperator << std::endl;
+	std::cout << "| " << it->getneighborNodeId() << "\t\t" << columnSeperator << it->getRecommendingNodes() << "\t\t" << columnSeperator << it->getrecValue() << "\t\t" << columnSeperator << it->getMaturityLevel() << "\t\t" << columnSeperator << "" << "\t\t" << columnSeperator << std::endl;
 	}
-
 }
 
 

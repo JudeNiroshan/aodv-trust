@@ -16,7 +16,7 @@ Ipv4Address RecommendationTableEntry::getneighborNodeId()
 	return this->neighborNodeId;
 }
 
-std::vector<std::string> RecommendationTableEntry::getRecommendingNodesList()
+Ipv4Address RecommendationTableEntry::getRecommendingNodes()
 {
 	return this->recommendingNodesList;
 }

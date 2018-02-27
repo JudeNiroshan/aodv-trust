@@ -22,14 +22,12 @@ TrustTable* TestValueGenerator::getDummyTrustTable()
 	row1.setDestinationNode("192.168.2.1");
 	row1.setDirectTrust(0.12);
 	row1.setIndirectTrust(7.2);
-	row1.setInteractionCount(2);
 	row1.calculateGlobalTrust();
 
 	TrustTableEntry row2;
 	row2.setDestinationNode("192.168.2.2");
 	row2.setDirectTrust(0.32);
 	row2.setIndirectTrust(5.2);
-	row2.setInteractionCount(3);
 	row2.calculateGlobalTrust();
 
 	TrustTable* trustTable = new TrustTable();
@@ -43,11 +41,9 @@ TrustTable * TestValueGenerator::getDummyDirTrustTable()
 {
 	TrustTableEntry row1;
 	row1.setDestinationNode("172.168.1.1");
-	row1.setInteractionCount(10);
 
 	TrustTableEntry row2;
 	row2.setDestinationNode("172.168.1.2");
-	row2.setInteractionCount(8);
 
 
 	TrustTable* trustTable = new TrustTable();

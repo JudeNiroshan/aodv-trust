@@ -26,8 +26,6 @@ int main()
 	//identifyTrustLevel();
 	std::cout << "--After calculating direct trust--" << std::endl;
 
-
-
 	std::cout << "-----------------------------------" << std::endl;
 
 	TrustTable* trustTable = TestValueGenerator::getDummyTrustTable();
@@ -112,7 +110,6 @@ double IndTrustCal::calculateWeight(TrustTableEntry node, TrustTableEntry target
 			double r_new_node = calculateRNew(*it, targetNode);
 			r_new_all = r_new_all + r_new_node;
 	}
-
 	return r_new_nei_node / r_new_all;
 }
 
@@ -177,7 +174,6 @@ double IndTrustCal::calculateIndirectTrust(TrustTableEntry targetNode)
 			double cal_w_term = w * (r_new_nei_node * rec[1]);
 			w_sum = w_sum + cal_w_term;
 	}
-
 	return w_sum;
 }
 

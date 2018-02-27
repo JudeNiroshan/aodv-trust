@@ -28,6 +28,8 @@
 #include "aodv-packet.h"
 #include "ns3/address-utils.h"
 #include "ns3/packet.h"
+#include "TrustTable.h"
+#include "aodv-routing-protocol.h"
 
 namespace ns3
 {
@@ -634,6 +636,93 @@ operator<< (std::ostream & os, RerrHeader const & h )
 {
   h.Print (os);
   return os;
+}
+
+
+//-----------------------------------------------------------------------------
+// TRR
+//-----------------------------------------------------------------------------
+TRRHeader::TRRHeader ( double GT, double DT, uint32_t trrID, Ipv4Address dst,
+                        uint32_t dstSeqNo, Ipv4Address origin, uint32_t originSeqNo) :
+  m_GT (GT), m_DT (DT), m_trrID (trrID), m_dst (dst),
+  m_dstSeqNo (dstSeqNo), m_origin (origin),  m_originSeqNo (originSeqNo)
+{
+}
+
+NS_OBJECT_ENSURE_REGISTERED (TRRHeader);
+
+TypeId
+TRRHeader::GetTypeId ()
+{
+  static TypeId tid = TypeId ("ns3::aodv::TRRHeader")
+    .SetParent<Header> ()
+    .AddConstructor<TRRHeader> ()
+  ;
+  return tid;
+}
+
+TypeId
+TRRHeader::GetInstanceTypeId () const
+{
+  return GetTypeId ();
+}
+
+uint32_t
+TRRHeader::GetSerializedSize () const
+{
+  return 23;
+}
+
+void
+TRRHeader::Serialize (Buffer::Iterator i) const
+{
+  i.WriteU8 (m_GT);
+  i.WriteU8 (m_DT);
+  i.WriteHtonU32 (m_trrID);
+  WriteTo (i, m_dst);
+  i.WriteHtonU32 (m_dstSeqNo);
+  WriteTo (i, m_origin);
+  i.WriteHtonU32 (m_originSeqNo);
+}
+
+uint32_t
+TRRHeader::Deserialize (Buffer::Iterator start)
+{
+  Buffer::Iterator i = start;
+  m_GT = i.ReadU8 ();
+  m_DT = i.ReadU8 ();
+  m_trrID = i.ReadNtohU32 ();
+  ReadFrom (i, m_dst);
+  m_dstSeqNo = i.ReadNtohU32 ();
+  ReadFrom (i, m_origin);
+  m_originSeqNo = i.ReadNtohU32 ();
+
+  uint32_t dist = i.GetDistanceFrom (start);
+  NS_ASSERT (dist == GetSerializedSize ());
+  return dist;
+}
+
+void
+TRRHeader::Print (std::ostream &os) const
+{
+  os << "TRR ID " << m_trrID << " destination: ipv4 " << m_dst
+     << " sequence number " << m_dstSeqNo << " source: ipv4 "
+     << m_origin << " sequence number " << m_originSeqNo ;
+}
+
+std::ostream &
+operator<< (std::ostream & os, TRRHeader const & h)
+{
+  h.Print (os);
+  return os;
+}
+
+bool
+TRRHeader::operator== (TRRHeader const & o) const
+{
+  return ( m_GT == o.m_GT && m_DT == o.m_DT &&
+          m_dst == o.m_dst && m_dstSeqNo == o.m_dstSeqNo &&
+          m_origin == o.m_origin && m_originSeqNo == o.m_originSeqNo);
 }
 }
 }
