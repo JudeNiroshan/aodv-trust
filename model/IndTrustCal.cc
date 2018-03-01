@@ -100,7 +100,7 @@ double IndTrustCal::calculateWeight(TrustTableEntry node,
 			this->trustTable->getTrustTableEntries();
 	for (std::vector<TrustTableEntry>::iterator it = node_entry_list.begin();
 			it != node_entry_list.end(); it++) {
-		if (it->getDestinationNode() == targetNode.getDestinationNode()) {
+		if (it->getDestinationNode() != targetNode.getDestinationNode()) {
 			double r_new_node = calculateRNew(*it, targetNode);
 			r_new_all = r_new_all + r_new_node;
 		}
@@ -163,7 +163,7 @@ double IndTrustCal::calculateIndirectTrust(TrustTableEntry targetNode) {
 	double w_sum = 0;
 	for (std::vector<TrustTableEntry>::iterator it = node_entry_list.begin();
 			it != node_entry_list.end(); it++) {
-		if (it->getDestinationNode() == targetNode.getDestinationNode()) {
+		if (it->getDestinationNode() != targetNode.getDestinationNode()) {
 			double w = calculateWeight(*it, targetNode);
 			double r_new_nei_node = calculateRNew(*it, targetNode);
 			double *rec;
