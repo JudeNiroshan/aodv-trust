@@ -67,8 +67,6 @@ namespace aodv {
 IndTrustCal::IndTrustCal() {
 }
 
-<<<<<<< HEAD
-=======
 /**
  * Method:    sendTRR
  * Returns:   rec
@@ -82,7 +80,6 @@ double* IndTrustCal::sendTRR(TrustTableEntry node, TrustTableEntry targetNode) {
 	return rec;
 }
 
->>>>>>> 2a5e1f1b981eff0047833f40cb4259bf3463846c
 /**
  * Method:    setTrustTable
  * Returns:

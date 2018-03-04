@@ -400,8 +400,8 @@ RoutingProtocol::sendTRR(TrustTableEntry source, TrustTableEntry receiver, Trust
       packet->AddHeader (tHeader);
 
       NS_LOG_DEBUG ("Send RREQ with id " << trrHeader.GetId() << " to socket");
-      Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))),
-    		  	  	  	  	  &RoutingProtocol::SendTo, this, socket, packet, targetNode);
+ //     Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))),
+   // 		  	  	  	  	  &RoutingProtocol::SendTo, this, socket, packet, targetNode);
 
 
 }
@@ -427,10 +427,7 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
 
   if (IsMyOwnAddress (trrHeader.GetDst ()))
   {
-
-
-
-	  rec = sendTRR(node, targetNode);
+//	  rec = sendTRR(node, targetNode);
 
     return;
   }
@@ -439,8 +436,8 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
    {
  	  if(it->getDestinationNode() == trrHeader.GetDst())
  	  {
- 		trrHeader.setDT(it->getDirectTrust());
- 		trrHeader.setDT(it->getGlobalTrust());
+ //		trrHeader.setDT(it->getDirectTrust());
+ //		trrHeader.setDT(it->getGlobalTrust());
  	  }
    }
 
@@ -450,8 +447,8 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
    packetReply->AddHeader (tHeader);
 
    NS_LOG_DEBUG ("Send RREQ with id " << trrHeader.GetId() << " to socket");
-   Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))),
- 		  	  	  	  	  &RoutingProtocol::SendTo, this, socket, packetReply, sender);
+  // Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))),
+ //		  	  	  	  	  &RoutingProtocol::SendTo, this, socket, packetReply, sender);
 
   if(m_routingTable.LookupRoute (sender, rt))
     {
