@@ -223,6 +223,8 @@ private:
   void RecvReplyAck (Ipv4Address neighbor);
   /// Receive RERR from node with address src
   void RecvError (Ptr<Packet> p, Ipv4Address src);
+  //receive TRR message
+  void RecvTrr (Ipv4Address sender, Ptr<Packet> packet );
   //\}
 
   ///\name Send
@@ -276,6 +278,8 @@ private:
   void RouteRequestTimerExpire (Ipv4Address dst);
   /// Mark link to neighbor node as unidirectional for blacklistTimeout
   void AckTimerExpire (Ipv4Address neighbor,  Time blacklistTimeout);
+  ///send the TRR message
+  void sendTRR(TrustTableEntry source, TrustTableEntry node, TrustTableEntry targetNode);
 
   /// Provides uniform random variables.
   Ptr<UniformRandomVariable> m_uniformRandomVariable;  

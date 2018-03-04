@@ -42,7 +42,6 @@
 #include "TrustTable.h"
 #include <algorithm>
 #include <limits>
-#include "TestValueGenerator.h"
 #include "DirTrustCal.h"
 #include "IndTrustCal.h"
 #include "BackupTable.h"
@@ -350,7 +349,6 @@ RoutingProtocol::Start ()
 	BackupTable* backupTable = TestValueGenerator::getDummyBackupTableByTrustTable(trustTable);
 	backupTable->printTable();
 
-
 	RecommendationTable* recomendationTable = TestValueGenerator::getDummyRecommendationTableByTrustTable(trustTable);
 
 	std::cout << "Recommendation Table After adding values..." << std::endl;
@@ -376,8 +374,93 @@ RoutingProtocol::Start ()
   m_rerrRateLimitTimer.SetFunction (&RoutingProtocol::RerrRateLimitTimerExpire,
                                     this);
   m_rerrRateLimitTimer.Schedule (Seconds (1));
+}
+
+/**
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                    A ---------> B ---------> D                 |
+  |                    ^----------> C -----------^                 |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+* source: A
+* receiver: B
+* targetNode: D
+*/
+void
+RoutingProtocol::sendTRR(TrustTableEntry source, TrustTableEntry receiver, TrustTableEntry targetNode)
+{
+	  // Create TRR header
+	  TRRHeader trrHeader;
+	  trrHeader.SetDst (receiver.getDestinationNode());
+	  trrHeader.SetOrigin (source.getDestinationNode());
+
+      Ptr<Packet> packet = Create<Packet> ();
+      packet->AddHeader (trrHeader);
+      TypeHeader tHeader (AODVTYPE_TRR);
+      packet->AddHeader (tHeader);
+
+      NS_LOG_DEBUG ("Send RREQ with id " << trrHeader.GetId() << " to socket");
+      Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))),
+    		  	  	  	  	  &RoutingProtocol::SendTo, this, socket, packet, targetNode);
+
 
 }
+
+
+/**
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                    A ---------> B ---------> D                 |
+  |                     \----------> C ----------^                 |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+* receiver: B
+* sender: A
+*/
+void
+RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
+{
+  NS_LOG_FUNCTION (this);
+  RoutingTableEntry rt;
+  TRRHeader trrHeader;
+  packet->RemoveHeader(trrHeader);
+  std::cout << "RECEIVE TRR TARGET: "<< trrHeader.GetDst() << std::endl;
+
+  if (IsMyOwnAddress (trrHeader.GetDst ()))
+  {
+
+
+
+	  rec = sendTRR(node, targetNode);
+
+    return;
+  }
+
+  for (std::vector<TrustTableEntry>::iterator it = m_trustTable.getTrustTableEntries().begin(); it != m_trustTable.getTrustTableEntries().end(); it++)
+   {
+ 	  if(it->getDestinationNode() == trrHeader.GetDst())
+ 	  {
+ 		trrHeader.setDT(it->getDirectTrust());
+ 		trrHeader.setDT(it->getGlobalTrust());
+ 	  }
+   }
+
+   Ptr<Packet> packetReply = Create<Packet> ();
+   packetReply->AddHeader (trrHeader);
+   TypeHeader tHeader (AODVTYPE_TRR);
+   packetReply->AddHeader (tHeader);
+
+   NS_LOG_DEBUG ("Send RREQ with id " << trrHeader.GetId() << " to socket");
+   Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))),
+ 		  	  	  	  	  &RoutingProtocol::SendTo, this, socket, packetReply, sender);
+
+  if(m_routingTable.LookupRoute (sender, rt))
+    {
+      rt.m_ackTimer.Cancel ();
+      rt.SetFlag (VALID);
+      m_routingTable.Update (rt);
+    }
+ }
+
 
 Ptr<Ipv4Route>
 RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
@@ -1097,6 +1180,11 @@ RoutingProtocol::RecvAodv (Ptr<Socket> socket)
         RecvReplyAck (sender);
         break;
       }
+    case AODVTYPE_TRR:
+	{
+		  RecvTrr (sender, packet);
+		        break;
+	}
     }
 }
 
@@ -1148,20 +1236,13 @@ RoutingProtocol::UpdateRouteToNeighbor (Ipv4Address sender, Ipv4Address receiver
           m_routingTable.Update (newEntry);
         }
     }
-  IndTrustCal indTrustCal;
 
-  // Create TRR header
-  TRRHeader trrHeader;
-  trrHeader.SetDst (receiver);
-  trrHeader.SetOrigin (sender);
 
   TrustTableEntry trustTableEntry;
   trustTableEntry.setDestinationNode(sender);
   int count = 0;
 
-  std::vector<TrustTableEntry> &existingTrustTableEntries = m_trustTable.getTrustTableEntries();
-
-  for (std::vector<TrustTableEntry>::iterator it = existingTrustTableEntries.begin(); it != existingTrustTableEntries.end(); it++)
+  for (std::vector<TrustTableEntry>::iterator it = m_trustTable.getTrustTableEntries().begin(); it != m_trustTable.getTrustTableEntries().end(); it++)
   {
 	  if(it->getDestinationNode() == sender)
 	  {count++;}
@@ -1170,8 +1251,6 @@ RoutingProtocol::UpdateRouteToNeighbor (Ipv4Address sender, Ipv4Address receiver
   if(count == 0)
   {
 	 m_trustTable.addTrustTableEntry(trustTableEntry);
-	  trrHeader.GetGT(trustTableEntry);
-	  trrHeader.GetDT(trustTableEntry);
   }
 
   //populate recommendation table

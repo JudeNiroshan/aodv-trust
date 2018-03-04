@@ -4,6 +4,8 @@
 #include "NodeEntry.h"
 #include "TestValueGenerator.h"
 #include "TrustLevelClassifier.h"
+#include "aodv-routing-protocol.h"
+#include "ns3/log.h"
 #include <iostream>
 
 
@@ -69,24 +71,6 @@ int main()
 IndTrustCal::IndTrustCal()
 {
 }
-
-
-/**
-* Method:    sendTRR
-* Returns:   rec
-* Parameter: node, targetNode
-*/
-double* IndTrustCal::sendTRR(TrustTableEntry node, TrustTableEntry targetNode)
-{
-	//TODO : Need to send a packet to targetNode to get the DT and GT
-	static double rec[2];
-	rec[0] = 0.5;
-	rec[1] = 0.6;
-	return rec;
-}
-
-
-
 
 /**
 * Method:    setTrustTable
