@@ -157,7 +157,8 @@ RoutingProtocol::RoutingProtocol () :
   m_htimer (Timer::CANCEL_ON_DESTROY),
   m_rreqRateLimitTimer (Timer::CANCEL_ON_DESTROY),
   m_rerrRateLimitTimer (Timer::CANCEL_ON_DESTROY),
-  m_lastBcastTime (Seconds (0))
+  m_lastBcastTime (Seconds (0)),
+  m_recHanlder(this)
 {
   m_nb.SetCallback (MakeCallback (&RoutingProtocol::SendRerrWhenBreaksLinkToNextHop, this));
 }
@@ -376,89 +377,6 @@ RoutingProtocol::Start ()
   m_rerrRateLimitTimer.Schedule (Seconds (1));
 }
 
-/**
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-  |                    A ---------> B ---------> D                 |
-  |                    ^----------> C -----------^                 |
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-* source: A
-* receiver: B
-* targetNode: D
-*/
-void
-RoutingProtocol::sendTRR(TrustTableEntry source, TrustTableEntry receiver, TrustTableEntry targetNode)
-{
-	  // Create TRR header
-	  TRRHeader trrHeader;
-	  trrHeader.SetDst (receiver.getDestinationNode());
-	  trrHeader.SetOrigin (source.getDestinationNode());
-
-      Ptr<Packet> packet = Create<Packet> ();
-      packet->AddHeader (trrHeader);
-      TypeHeader tHeader (AODVTYPE_TRR);
-      packet->AddHeader (tHeader);
-
-      NS_LOG_DEBUG ("Send RREQ with id " << trrHeader.GetId() << " to socket");
- //     Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))),
-   // 		  	  	  	  	  &RoutingProtocol::SendTo, this, socket, packet, targetNode);
-
-
-}
-
-
-/**
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-  |                    A ---------> B ---------> D                 |
-  |                     \----------> C ----------^                 |
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-* receiver: B
-* sender: A
-*/
-void
-RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
-{
-  NS_LOG_FUNCTION (this);
-  RoutingTableEntry rt;
-  TRRHeader trrHeader;
-  packet->RemoveHeader(trrHeader);
-  std::cout << "RECEIVE TRR TARGET: "<< trrHeader.GetDst() << std::endl;
-
-  if (IsMyOwnAddress (trrHeader.GetDst ()))
-  {
-//	  rec = sendTRR(node, targetNode);
-
-    return;
-  }
-
-  for (std::vector<TrustTableEntry>::iterator it = m_trustTable.getTrustTableEntries().begin(); it != m_trustTable.getTrustTableEntries().end(); it++)
-   {
- 	  if(it->getDestinationNode() == trrHeader.GetDst())
- 	  {
- //		trrHeader.setDT(it->getDirectTrust());
- //		trrHeader.setDT(it->getGlobalTrust());
- 	  }
-   }
-
-   Ptr<Packet> packetReply = Create<Packet> ();
-   packetReply->AddHeader (trrHeader);
-   TypeHeader tHeader (AODVTYPE_TRR);
-   packetReply->AddHeader (tHeader);
-
-   NS_LOG_DEBUG ("Send RREQ with id " << trrHeader.GetId() << " to socket");
-  // Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))),
- //		  	  	  	  	  &RoutingProtocol::SendTo, this, socket, packetReply, sender);
-
-  if(m_routingTable.LookupRoute (sender, rt))
-    {
-      rt.m_ackTimer.Cancel ();
-      rt.SetFlag (VALID);
-      m_routingTable.Update (rt);
-    }
- }
-
-
 Ptr<Ipv4Route>
 RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
                               Ptr<NetDevice> oif, Socket::SocketErrno &sockerr)
@@ -505,7 +423,7 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
 //direct trust calculation
    	DirTrustCal dirCalculator;
     dirCalculator.calculateDirectTrust(&m_trustTable);
-
+/*
  //indirect trust calculation
 	IndTrustCal indTrustCal;
 	indTrustCal.setTrustTable(&m_trustTable);
@@ -521,6 +439,7 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
 
       return route;
     }
+*/
 
   // Valid route not found, in this case we return loopback. 
   // Actual route request will be deferred until packet will be fully formed, 
@@ -1179,8 +1098,8 @@ RoutingProtocol::RecvAodv (Ptr<Socket> socket)
       }
     case AODVTYPE_TRR:
 	{
-		  RecvTrr (sender, packet);
-		        break;
+		recHanlder.RecvTrr(sender, packet);
+		break;
 	}
     }
 }

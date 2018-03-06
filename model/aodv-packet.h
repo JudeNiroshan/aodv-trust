@@ -358,18 +358,24 @@ public:
 
   ///\name Fields
   //\{
-  double GetDT (TrustTableEntry trustTableEntry) {return trustTableEntry.getGlobalTrust();}
-  double GetGT (TrustTableEntry trustTableEntry) {return trustTableEntry.getDirectTrust();}
+  double GetDT () {return m_DT;}
+  void setDT(double dt) { m_DT = dt; }
+  double GetGT () {return m_GT;}
+  void setGT(double gt) { m_GT = gt; }
   void SetId (uint32_t id) { m_trrID = id; }
   uint32_t GetId () const { return m_trrID; }
   void SetDst (Ipv4Address a) { m_dst = a; }
   Ipv4Address GetDst () const { return m_dst; }
+  void SetTarget (Ipv4Address a) { m_target = a; }
+  Ipv4Address GetTarget () const { return m_target; }
   void SetDstSeqno (uint32_t s) { m_dstSeqNo = s; }
   uint32_t GetDstSeqno () const { return m_dstSeqNo; }
   void SetOrigin (Ipv4Address a) { m_origin = a; }
   Ipv4Address GetOrigin () const { return m_origin; }
   void SetOriginSeqno (uint32_t s) { m_originSeqNo = s; }
   uint32_t GetOriginSeqno () const { return m_originSeqNo; }
+  void SetTrrLifetime (Time t) { m_trrLifetime = t.GetMilliSeconds(); }
+  Time GetTrrLifetime () const { return m_trrLifetime; }
   //\}
 
   ///\name Flags
@@ -390,7 +396,9 @@ private:
   Ipv4Address    m_dst;            ///< Destination IP Address
   uint32_t       m_dstSeqNo;       ///< Destination Sequence Number
   Ipv4Address    m_origin;         ///< Originator IP Address
+  Ipv4Address    m_target;         ///< Target IP Address
   uint32_t       m_originSeqNo;    ///< Source Sequence Number
+  uint32_t		 m_trrLifetime;    ///< time limit to discard the packet
 };
 
 std::ostream & operator<< (std::ostream & os, TRRHeader const &);
