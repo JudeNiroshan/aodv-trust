@@ -14,18 +14,19 @@ def build(bld):
 	'helper/aodv-trust-helper.cc',
         'model/TrustTableEntry.cc',
         'model/TrustTable.cc',
-        'model/BackupTable.cc',
         'model/BackupTableEntry.cc',
+        'model/BackupTable.cc',
         'model/NodeEntry.cc',
         'model/TestValueGenerator.cc',
         'model/DirTrustCal.cc',
-        'model/DirTrustHelper.cc',
         'model/IndTrustCal.cc',
         'model/RecommendationTable.cc',
         'model/RecommendationTableEntry.cc',
         'model/TrustLevelClassifier.cc',
         'model/Spiral.cc',
-        'model/TrustInfoReceiver.cc'
+        'model/TrustInfoReceiver.cc',
+        'model/TRRTableEntry.cc',
+        'model/TRRTable.cc'
         ]
 
     aodv_test = bld.create_ns3_module_test_library('aodv-trust')
@@ -44,19 +45,21 @@ def build(bld):
         'model/aodv-neighbor.h',
         'model/aodv-routing-protocol.h',
         'helper/aodv-trust-helper.h',
-        'model/TrustTableEntry.h',
+        'model/TrustTableEntry.h',    
         'model/TrustTable.h',
+        'model/BackupTableEntry.h',
         'model/BackupTable.h',
         'model/NodeEntry.h',
         'model/TestValueGenerator.h',
         'model/DirTrustCal.h',
-        'model/DirTrustHelper.h',
         'model/IndTrustCal.h',
         'model/RecommendationTable.h',
         'model/RecommendationTableEntry.h',
         'model/TrustLevelClassifier.h',
         'model/Spiral.h',
-        'model/TrustInfoReceiver.h'
+        'model/TrustInfoReceiver.h',
+        'model/TRRTableEntry.h',
+        'model/TRRTable.h'
         ]
 
     if bld.env['ENABLE_EXAMPLES']:

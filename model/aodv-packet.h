@@ -32,8 +32,9 @@
 #include "ns3/header.h"
 #include "ns3/enum.h"
 #include "ns3/ipv4-address.h"
-#include <map>
+#include "TrustTableEntry.h"
 #include "ns3/nstime.h"
+#include <map>
 
 namespace ns3 {
 namespace aodv {
@@ -43,7 +44,8 @@ enum MessageType
   AODVTYPE_RREQ  = 1,   //!< AODVTYPE_RREQ
   AODVTYPE_RREP  = 2,   //!< AODVTYPE_RREP
   AODVTYPE_RERR  = 3,   //!< AODVTYPE_RERR
-  AODVTYPE_RREP_ACK = 4 //!< AODVTYPE_RREP_ACK
+  AODVTYPE_RREP_ACK = 4,//!< AODVTYPE_RREP_ACK
+  AODVTYPE_TRR = 5		//!< AODVTYPE_TRR
 };
 
 /**
@@ -330,6 +332,78 @@ private:
 };
 
 std::ostream & operator<< (std::ostream & os, RerrHeader const &);
+
+/**
+* \ingroup aodv
+* \brief Trust Recommendation Request (TRR) Message Format
+  \verbatim
+**/
+class TRRHeader : public Header
+{
+public:
+  /// c-tor
+	TRRHeader (double GT = 0, double DT = 0,
+              uint32_t trrID = 0, Ipv4Address dst = Ipv4Address (),
+              uint32_t dstSeqNo = 0, Ipv4Address origin = Ipv4Address (),
+              uint32_t originSeqNo = 0);
+
+  //\{
+  static TypeId GetTypeId ();
+  TypeId GetInstanceTypeId () const;
+  uint32_t GetSerializedSize () const;
+  void Serialize (Buffer::Iterator start) const;
+  uint32_t Deserialize (Buffer::Iterator start);
+  void Print (std::ostream &os) const;
+  //\}
+
+  ///\name Fields
+  //\{
+  double GetDT () {return m_DT;}
+  void setDT(double dt) { m_DT = dt; }
+  double GetGT () {return m_GT;}
+  void setGT(double gt) { m_GT = gt; }
+  void SetId (uint32_t id) { m_trrID = id; }
+  uint32_t GetId () const { return m_trrID; }
+  void SetDst (Ipv4Address a) { m_dst = a; }
+  Ipv4Address GetDst () const { return m_dst; }
+  void SetTarget (Ipv4Address a) { m_target = a; }
+  Ipv4Address GetTarget () const { return m_target; }
+  void SetDstSeqno (uint32_t s) { m_dstSeqNo = s; }
+  uint32_t GetDstSeqno () const { return m_dstSeqNo; }
+  void SetOrigin (Ipv4Address a) { m_origin = a; }
+  Ipv4Address GetOrigin () const { return m_origin; }
+  void SetOriginSeqno (uint32_t s) { m_originSeqNo = s; }
+  uint32_t GetOriginSeqno () const { return m_originSeqNo; }
+  void SetTrrLifetime (Time t) { m_trrLifetime = t; }
+  Time GetTrrLifetime () const { return m_trrLifetime; }
+  //\}
+
+  ///\name Flags
+  //\{
+  void SetGratiousRrep (bool f);
+  bool GetGratiousRrep () const;
+  void SetDestinationOnly (bool f);
+  bool GetDestinationOnly () const;
+  void SetUnknownSeqno (bool f);
+  bool GetUnknownSeqno () const;
+  //\}
+
+  bool operator== (TRRHeader const & o) const;
+private:
+  double 		 m_GT;			   ///<Global Trust
+  double 		 m_DT;			   ///<Direct Trust
+  uint32_t       m_trrID;          ///< TRR ID
+  Ipv4Address    m_dst;            ///< Destination IP Address
+  uint32_t       m_dstSeqNo;       ///< Destination Sequence Number
+  Ipv4Address    m_origin;         ///< Originator IP Address
+  Ipv4Address    m_target;         ///< Target IP Address
+  uint32_t       m_originSeqNo;    ///< Source Sequence Number
+  Time		 m_trrLifetime;        ///< time limit to discard the packet
+};
+
+std::ostream & operator<< (std::ostream & os, TRRHeader const &);
+
+
 }
 }
 #endif /* AODVPACKET_H */

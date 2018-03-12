@@ -1,4 +1,3 @@
-//#include "stdafx.h"
 #include "BackupTableEntry.h"
 
 namespace ns3
@@ -10,12 +9,12 @@ BackupTableEntry::BackupTableEntry()
 {
 }
 
-void BackupTableEntry::setNeiNode(NodeEntry * neiNode)
+void BackupTableEntry::setNeiNode(Ipv4Address neiNode)
 {
 	this->neiNode = neiNode;
 }
 
-NodeEntry * BackupTableEntry::getNeiNode()
+Ipv4Address BackupTableEntry::getNeiNode()
 {
 	return this->neiNode;
 }

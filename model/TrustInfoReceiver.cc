@@ -2,7 +2,6 @@
 #include <string>
 #include "TrustTable.h"
 #include "RecommendationTable.h"
-#include "NodeEntry.h"
 #include <iostream>
 
 namespace ns3
@@ -48,11 +47,11 @@ void TrustInfoReceiver::validateReceivedTrustInfo()
 	}*/
 }
 
-void TrustInfoReceiver::sendMaliciousBroadcast(NodeEntry* node)
+void TrustInfoReceiver::sendMaliciousBroadcast(Ipv4Address node)
 {
 	//TODO: implement the sending the broadcast packet which says the given node has identified as a malicious node
 	
-	std::cout << node->getNodeName() << " is a pure malicious node. So please delete that node from your tables." << std::endl;
+	std::cout << node << " is a pure malicious node. So please delete that node from your tables." << std::endl;
 }
 
 

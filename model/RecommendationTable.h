@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include "RecommendationTableEntry.h"
+#include "ns3/ipv4-address.h"
 
 namespace ns3
 {
@@ -14,14 +15,12 @@ class RecommendationTable
 private:
 	std::string columnSeperator;
 	std::vector<RecommendationTableEntry> recommendationTableRecords;
-	static RecommendationTable* instance;
 public:
 	RecommendationTable();
-	static RecommendationTable* getInstance();
 	void addRecommendationTableEntry(RecommendationTableEntry entry);
 	void removeRecommendationTableEntry(RecommendationTableEntry entry);
 	std::vector<RecommendationTableEntry>& getRecommendationTableEntries();
-	std::vector<RecommendationTableEntry>& getRecommendedNodeEntries(std::string nodeId);
+	std::vector<RecommendationTableEntry>& getRecommendedNodeEntries(Ipv4Address nodeId);
 	void setRecommendationTable(std::vector<RecommendationTableEntry> newTrustTable);
 	void printTable();
 

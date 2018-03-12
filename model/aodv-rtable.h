@@ -37,6 +37,7 @@
 #include "ns3/timer.h"
 #include "ns3/net-device.h"
 #include "ns3/output-stream-wrapper.h"
+#include "TrustTable.h"
 
 namespace ns3 {
 namespace aodv {
@@ -179,6 +180,8 @@ private:
   bool m_blackListState;
   /// Time for which the node is put into the blacklist
   Time m_blackListTimeout;
+
+
 };
 
 /**

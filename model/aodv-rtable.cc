@@ -448,6 +448,5 @@ RoutingTable::Print (Ptr<OutputStreamWrapper> stream) const
     }
   *stream->GetStream () << "\n";
 }
-
 }
 }

@@ -1,18 +1,10 @@
-//#include "stdafx.h"
 #include "TrustLevelClassifier.h"
 #include "RecommendationTableEntry.h"
-#include "TestValueGenerator.h"
-#include <vector>
-#include <iostream>
-#include "BackupTable.h"
 #include "IndTrustCal.h"
 #include "TrustTableEntry.h"
 #include "DirTrustCal.h"
-#include "NodeEntry.h"
-#include "TestValueGenerator.h"
-#include "TrustLevelClassifier.h"
 #include "Spiral.h"
-
+#include <vector>
 #include <iostream>
 
 namespace ns3
@@ -57,31 +49,14 @@ void TrustLevelClassifier::identifyTrustLevel(TrustTable* trustTable)
 			{
 				it->setTrustLevel(3);
 
-						//double	reduction_factor = calculateReductionFactor(node.getInteractionCount(), node.getGlobalTrust());
-
-
-						//RecommendationTable* recTable = TestValueGenerator::getDummyRecommendationTableByTrustTable(trustTable);
-
-						//std::vector<RecommendationTableEntry> rec_entry_vector = recTable->getRecommendationTableEntries();
-						//std::vector<string>* recommendingNodesList;
-
-						//for (vector<RecommendationTableEntry>::iterator it = rec_entry_vector.begin(); it != rec_entry_vector.end(); it++) {
-						//
-
-						//	//for (vector<RecommendationTableEntry>::iterator recNode = recommendingNodesList.begin(); recNode != recommendingNodesList.end(); recNode++)
-						//	//{
-						//	//	recNode->
-						//	//}
-						//}
-
-		//recalculateIndirectTrust(it->getIndirectTrust(), reduction_factor);
+				//reduce trust here
 			}
 			else
 			{
 				//call spiral model method
 				Spiral model;
 				double *past_global_trust_range;
-				past_global_trust_range = model.getMinMaxTrust(BackupTable::getInstance()->getTrustList());
+				past_global_trust_range = model.getMinMaxTrust(trustTable);
 				std::cout << "Max GT:- " << past_global_trust_range[1] << std::endl;
 //				model.addMaliciousCategory(past_global_trust_range, trustTable);
 			}

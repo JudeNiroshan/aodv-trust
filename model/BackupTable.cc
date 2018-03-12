@@ -1,4 +1,3 @@
-//#include "stdafx.h"
 #include "BackupTable.h"
 #include <iostream>
 
@@ -7,21 +6,12 @@ namespace ns3
 namespace aodv
 {
 
-BackupTable* BackupTable::instance = NULL;
-
 
 BackupTable::BackupTable()
 {
 	columnSeperator = " | ";
 }
 
-BackupTable * BackupTable::getInstance()
-{
-	if (instance == NULL) {
-		instance = new BackupTable();
-	}
-	return instance;
-}
 
 void BackupTable::addBackupTableEntry(BackupTableEntry entry)
 {
@@ -39,7 +29,7 @@ void BackupTable::printTable()
 	std::cout << "| " << "Node" << columnSeperator << "Trust Value" << columnSeperator << "Time Duration" << columnSeperator << "Analyzed Result" << std::endl;
 	for (std::vector<BackupTableEntry>::iterator it = backupTableRecords.begin(); it != backupTableRecords.end(); it++)
 	{
-		std::cout << "| " << it->getNeiNode()->getNodeName() << columnSeperator << it->getTrustValue() << "\t" << columnSeperator << it->getTimeDuration() << "\t\t" << columnSeperator << it->getResult() << std::endl;
+		std::cout << "| " << it->getNeiNode() << columnSeperator << it->getTrustValue() << "\t" << columnSeperator << it->getTimeDuration() << "\t\t" << columnSeperator << it->getResult() << std::endl;
 	}
 }
 
