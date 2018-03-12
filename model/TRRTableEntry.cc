@@ -16,7 +16,7 @@ Ipv4Address TRRTableEntry::getTargetNodeId()
 	return this->targetNodeId;
 }
 
-void TRRTableEntry::setSenderNodeId(Ipv4Address targetNodeId)
+void TRRTableEntry::setTargetNodeId(Ipv4Address targetNodeId)
 {
 	this->targetNodeId = targetNodeId;
 }
@@ -49,27 +49,27 @@ void TRRTableEntry::setGlobalTrust(double globalTrust)
 	this->globalTrust = globalTrust;
 }
 
-uint32_t TRRTableEntry::getSentTime()
+Time TRRTableEntry::getSentTime()
 {
 	return sentTime;
 }
 
-void TRRTableEntry::setSentTime(uint32_t sentTime)
+void TRRTableEntry::setSentTime(Time sentTime)
 {
 	this->sentTime = sentTime;
 }
 
-uint32_t TRRTableEntry::getReceivedTime()
+Time TRRTableEntry::getReceivedTime()
 {
 	return receivedTime;
 }
 
-void TRRTableEntry::setReceivedTime(uint32_t receivedTime)
+void TRRTableEntry::setReceivedTime(Time receivedTime)
 {
 	this->receivedTime = receivedTime;
 }
 
-RecommendationTableEntry::~RecommendationTableEntry()
+TRRTableEntry::~TRRTableEntry()
 {
 }
 

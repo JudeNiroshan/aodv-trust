@@ -46,6 +46,7 @@
 #include "IndTrustCal.h"
 #include "BackupTable.h"
 #include "RecommendationTable.h"
+#include "TRRTable.h"
 #include "TrustLevelClassifier.h"
 #include "aodv-rtable.h"
 #include "TrustTableEntry.h"
@@ -157,8 +158,7 @@ RoutingProtocol::RoutingProtocol () :
   m_htimer (Timer::CANCEL_ON_DESTROY),
   m_rreqRateLimitTimer (Timer::CANCEL_ON_DESTROY),
   m_rerrRateLimitTimer (Timer::CANCEL_ON_DESTROY),
-  m_lastBcastTime (Seconds (0)),
-  m_recHanlder(this)
+  m_lastBcastTime (Seconds (0))
 {
   m_nb.SetCallback (MakeCallback (&RoutingProtocol::SendRerrWhenBreaksLinkToNextHop, this));
 }
@@ -435,11 +435,11 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
 		it->updateIndirectTrust(ind_trust_value);
 		it->calculateGlobalTrust();
 		//TODO: inside above calculateGlobalTrust() need to update backupTable.
-	}
+	}*/
 
       return route;
     }
-*/
+
 
   // Valid route not found, in this case we return loopback. 
   // Actual route request will be deferred until packet will be fully formed, 
@@ -454,8 +454,7 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
   return LoopbackRoute (header, oif);
 }
 
-void
-RoutingProtocol::DeferredRouteOutput (Ptr<const Packet> p, const Ipv4Header & header,
+void RoutingProtocol::DeferredRouteOutput (Ptr<const Packet> p, const Ipv4Header & header,
                                       UnicastForwardCallback ucb, ErrorCallback ecb)
 {
   NS_LOG_FUNCTION (this << p << header);
@@ -1098,7 +1097,7 @@ RoutingProtocol::RecvAodv (Ptr<Socket> socket)
       }
     case AODVTYPE_TRR:
 	{
-		recHanlder.RecvTrr(sender, packet);
+		RecvTrr(sender, packet);
 		break;
 	}
     }
@@ -2032,6 +2031,122 @@ RoutingProtocol::FindSocketWithInterfaceAddress (Ipv4InterfaceAddress addr ) con
     }
   Ptr<Socket> socket;
   return socket;
+}
+
+/**
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                    A ---------> B ---------> D                 |
+  |                    ^----------> C -----------^                 |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+* source: A
+* receiver: B
+* targetNode: D
+*/
+void
+RoutingProtocol::sendTRR(Ipv4Address source, Ipv4Address receiver, Ipv4Address targetNode)
+{
+	  // Create TRR header
+	  TRRHeader trrHeader;
+	  trrHeader.SetDst (receiver);
+	  trrHeader.SetOrigin (source);
+	  trrHeader.SetTarget(targetNode);
+	  trrHeader.SetTrrLifetime(Simulator::Now());
+
+      Ptr<Packet> packet = Create<Packet> ();
+      packet->AddHeader (trrHeader);
+      TypeHeader tHeader (AODVTYPE_TRR);
+      packet->AddHeader (tHeader);
+
+      RoutingTableEntry searchingRoutingEntry;
+      if(m_routingTable.LookupValidRoute(receiver, searchingRoutingEntry)){
+    	  Ptr<Socket> socket = FindSocketWithInterfaceAddress(searchingRoutingEntry.GetInterface ());
+    	  Simulator::Schedule (Time (500), &RoutingProtocol::SendTo, this, socket, packet, targetNode);
+      }
+}
+
+
+/**
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                    A ---------> B ---------> D                 |
+  |                     \----------> C ----------^                 |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+* receiver: B
+* sender: A
+*/
+void
+RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
+{
+  RoutingTableEntry rt;
+  TRRHeader trrHeader;
+  packet->RemoveHeader(trrHeader);
+  std::cout << "RECEIVE TRR TARGET: "<< trrHeader.GetDst() << std::endl;
+
+  if (IsMyOwnAddress (trrHeader.GetDst ()))
+  {
+//	  rec = sendTRR(node, targetNode);
+	  Time time = trrHeader.GetTrrLifetime();
+	  Time currentTime = Simulator::Now();
+
+	  if((currentTime - time) < Time(1500).GetMilliSeconds()){
+		  TRRTableEntry entry;
+		  entry.setSentTime(trrHeader.GetTrrLifetime());
+		  entry.setReceivedTime(currentTime);
+		  entry.setDirectTrust(trrHeader.GetDT());
+		  entry.setGlobalTrust(trrHeader.GetGT());
+		  entry.setTargetNodeId(trrHeader.GetTarget());
+
+		  m_TRRTable.addTrrTableEntry(entry);
+	  }
+
+    return;
+  }
+
+  bool status = false;
+
+  for (std::vector<TrustTableEntry>::iterator it = m_trustTable.getTrustTableEntries().begin(); it != m_trustTable.getTrustTableEntries().end(); it++)
+   {
+ 	  if(it->getDestinationNode() == trrHeader.GetDst())
+ 	  {
+ 		trrHeader.setDT(it->getDirectTrust());
+ 		trrHeader.setDT(it->getGlobalTrust());
+ 		status = true;
+ 	  }
+   }
+
+   Ptr<Packet> packetReply = Create<Packet> ();
+   packetReply->AddHeader (trrHeader);
+   TypeHeader tHeader (AODVTYPE_TRR);
+   packetReply->AddHeader (tHeader);
+
+   if(status)
+   {
+	   RoutingTableEntry searchingRoutingEntry;
+	   if(m_routingTable.LookupValidRoute(trrHeader.GetOrigin(), searchingRoutingEntry)){
+		   Ptr<Socket> socket = FindSocketWithInterfaceAddress(searchingRoutingEntry.GetInterface ());
+	   	   Simulator::Schedule (Time (500), &RoutingProtocol::SendTo, this, socket, packetReply, sender);
+	   }
+   }
+/*  if(m_routingTable.LookupRoute (sender, rt))
+    {
+      rt.m_ackTimer.Cancel ();
+      rt.SetFlag (VALID);
+      m_routingTable.Update (rt);
+    }*/
+ }
+
+void RoutingProtocol::execute(Ipv4Address node, TrustTable* trustTable) {
+
+	std::vector<TrustTableEntry>& node_entry_vector = trustTable->getTrustTableEntries();
+
+	for (std::vector<TrustTableEntry>::iterator it = node_entry_vector.begin(); it != node_entry_vector.end(); it++) {
+		Ipv4Address selectedTarget = it->getDestinationNode();
+
+		for (std::vector<TrustTableEntry>::iterator it2 = node_entry_vector.begin(); it2 != node_entry_vector.end(); it2++) {
+			sendTRR(node, it2->getDestinationNode(), selectedTarget);
+		}
+	}
 }
 
 }

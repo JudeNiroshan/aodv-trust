@@ -3,6 +3,7 @@
 #include <vector>
 #include <list>
 #include "ns3/ipv4-address.h"
+#include "ns3/nstime.h"
 
 
 namespace ns3
@@ -20,8 +21,8 @@ private:
 	Ipv4Address senderNodeId;
 	double directTrust;
 	double globalTrust;
-	uint32_t sentTime;
-	uint32_t receivedTime;
+	Time sentTime;
+	Time receivedTime;
 
 public:
 	Ipv4Address getTargetNodeId();
@@ -32,10 +33,10 @@ public:
 	void setDirectTrust(double DT);
 	double getGlobalTrust();
 	void setGlobalTrust(double DT);
-	uint32_t getSentTime();
-	void setSentTime(uint32_t sentTime);
-	uint32_t getReceivedTime();
-	void setReceivedTime(uint32_t receivedTime);
+	Time getSentTime();
+	void setSentTime(Time sentTime);
+	Time getReceivedTime();
+	void setReceivedTime(Time receivedTime);
 	TRRTableEntry();
 	~TRRTableEntry();
 };

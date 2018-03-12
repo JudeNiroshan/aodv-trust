@@ -39,12 +39,11 @@
 #include "ns3/ipv4-routing-protocol.h"
 #include "ns3/ipv4-interface.h"
 #include "ns3/ipv4-l3-protocol.h"
-#include <map>
 
 #include "TrustTable.h"
 #include "RecommendationTable.h"
 #include "BackupTable.h"
-
+#include "TRRTable.h"
 
 namespace ns3
 {
@@ -176,7 +175,10 @@ private:
   /// Backup table which contains historical trust data for directly connected nodes
   BackupTable m_backupTable;
   /// Recommendation hanlder which manages the recommendations for each router
-  RecommendationHandler m_recHanlder;
+//  RecommendationHandler* m_recHanlder;
+
+
+  TRRTable m_TRRTable;
 
 
 private:
@@ -259,6 +261,12 @@ private:
   //\}
 
   void SendTo (Ptr<Socket> socket, Ptr<Packet> packet, Ipv4Address destination);
+
+  void sendTRR(Ipv4Address source, Ipv4Address node, Ipv4Address targetNode);
+
+  void RecvTrr (Ipv4Address sender, Ptr<Packet> packet);
+
+  void execute(Ipv4Address node, TrustTable* trustTable);
 
   /// Hello timer
   Timer m_htimer;
