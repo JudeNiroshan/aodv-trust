@@ -266,7 +266,7 @@ private:
 
   void RecvTrr (Ipv4Address sender, Ptr<Packet> packet);
 
-  void execute(Ipv4Address node, TrustTable* trustTable);
+  void execute();
 
   /// Hello timer
   Timer m_htimer;

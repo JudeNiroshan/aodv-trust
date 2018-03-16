@@ -375,6 +375,8 @@ RoutingProtocol::Start ()
   m_rerrRateLimitTimer.SetFunction (&RoutingProtocol::RerrRateLimitTimerExpire,
                                     this);
   m_rerrRateLimitTimer.Schedule (Seconds (1));
+
+  Simulator::Schedule (Seconds (3), &RoutingProtocol::execute, this);
 }
 
 Ptr<Ipv4Route>
@@ -423,6 +425,7 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
 //direct trust calculation
    	DirTrustCal dirCalculator;
     dirCalculator.calculateDirectTrust(&m_trustTable);
+
 /*
  //indirect trust calculation
 	IndTrustCal indTrustCal;
@@ -1186,10 +1189,6 @@ RoutingProtocol::UpdateRouteToNeighbor (Ipv4Address sender, Ipv4Address receiver
   {
 	 m_recommendationTable.addRecommendationTableEntry(recommendationTableEntry);
   }
-  std::cout << "\n Printing recommendations table" << std::endl;
-  m_recommendationTable.printTable();
-  m_trustTable.printTable();
-
 }
 
 void
@@ -2136,17 +2135,29 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
     }*/
  }
 
-void RoutingProtocol::execute(Ipv4Address node, TrustTable* trustTable) {
+void RoutingProtocol::execute() {
 
-	std::vector<TrustTableEntry>& node_entry_vector = trustTable->getTrustTableEntries();
+	Ipv4InterfaceAddress iface;
 
-	for (std::vector<TrustTableEntry>::iterator it = node_entry_vector.begin(); it != node_entry_vector.end(); it++) {
-		Ipv4Address selectedTarget = it->getDestinationNode();
+	for (std::map<Ptr<Socket>, Ipv4InterfaceAddress>::const_iterator j =
+	         m_socketAddresses.begin (); j != m_socketAddresses.end (); ++j)
+	    {
+	      Ptr<Socket> socket = j->first;
+	      iface = j->second;
+	    }
 
-		for (std::vector<TrustTableEntry>::iterator it2 = node_entry_vector.begin(); it2 != node_entry_vector.end(); it2++) {
-			sendTRR(node, it2->getDestinationNode(), selectedTarget);
+	for (std::vector<TrustTableEntry>::iterator mainItr = m_trustTable.getTrustTableEntries().begin(); mainItr != m_trustTable.getTrustTableEntries().end(); mainItr++)
+	{
+		Ipv4Address selectedTarget = mainItr->getDestinationNode();
+
+		for (std::vector<TrustTableEntry>::iterator it2 = m_trustTable.getTrustTableEntries().begin(); it2 != m_trustTable.getTrustTableEntries().end(); it2++)
+		{
+			sendTRR(iface.GetLocal () , it2->getDestinationNode(), selectedTarget);
 		}
 	}
+	std::cout << "\n  ================== Printing trust table ==================" << std::endl;
+//	m_recommendationTable.printTable();
+	m_trustTable.printTable();
 }
 
 }
