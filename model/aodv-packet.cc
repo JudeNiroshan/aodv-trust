@@ -82,6 +82,7 @@ TypeHeader::Deserialize (Buffer::Iterator start)
     case AODVTYPE_RREQ:
     case AODVTYPE_RREP:
     case AODVTYPE_RERR:
+    case AODVTYPE_TRR:
     case AODVTYPE_RREP_ACK:
       {
         m_type = (MessageType) type;
@@ -118,6 +119,11 @@ TypeHeader::Print (std::ostream &os) const
     case AODVTYPE_RREP_ACK:
       {
         os << "RREP_ACK";
+        break;
+      }
+    case AODVTYPE_TRR:
+      {
+        os << "TRR";
         break;
       }
     default:
@@ -642,7 +648,7 @@ operator<< (std::ostream & os, RerrHeader const & h )
 //-----------------------------------------------------------------------------
 // TRR
 //-----------------------------------------------------------------------------
-TRRHeader::TRRHeader ( double GT, double DT, uint32_t trrID, Ipv4Address dst,
+TRRHeader::TRRHeader ( uint32_t GT, uint32_t DT, uint32_t trrID, Ipv4Address dst,
                         uint32_t dstSeqNo, Ipv4Address origin, uint32_t originSeqNo) :
   m_GT (GT), m_DT (DT), m_trrID (trrID), m_dst (dst),
   m_dstSeqNo (dstSeqNo), m_origin (origin),  m_originSeqNo (originSeqNo)
@@ -670,14 +676,14 @@ TRRHeader::GetInstanceTypeId () const
 uint32_t
 TRRHeader::GetSerializedSize () const
 {
-  return 23;
+  return 28;
 }
 
 void
 TRRHeader::Serialize (Buffer::Iterator i) const
 {
-  i.WriteU8 (m_GT);
-  i.WriteU8 (m_DT);
+  i.WriteHtonU32 (m_GT);
+  i.WriteHtonU32 (m_DT);
   i.WriteHtonU32 (m_trrID);
   WriteTo (i, m_dst);
   i.WriteHtonU32 (m_dstSeqNo);
@@ -688,9 +694,12 @@ TRRHeader::Serialize (Buffer::Iterator i) const
 uint32_t
 TRRHeader::Deserialize (Buffer::Iterator start)
 {
+//	std::cout<<"while deserializing start.GetSize()::::"<<start.GetSize()<<std::endl;
   Buffer::Iterator i = start;
-  m_GT = i.ReadU8 ();
-  m_DT = i.ReadU8 ();
+  m_GT = i.ReadNtohU32 ();
+
+  m_DT = i.ReadNtohU32 ();
+    std::cout<<"m_DT="<<m_DT<<std::endl;
   m_trrID = i.ReadNtohU32 ();
   ReadFrom (i, m_dst);
   m_dstSeqNo = i.ReadNtohU32 ();
@@ -698,7 +707,7 @@ TRRHeader::Deserialize (Buffer::Iterator start)
   m_originSeqNo = i.ReadNtohU32 ();
 
   uint32_t dist = i.GetDistanceFrom (start);
-  NS_ASSERT (dist == GetSerializedSize ());
+//  NS_ASSERT (dist == GetSerializedSize ());
   return dist;
 }
 
