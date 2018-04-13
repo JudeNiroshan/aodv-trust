@@ -2122,6 +2122,7 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
   RoutingTableEntry rt;
   TRRHeader trrHeader;
   packet->RemoveHeader(trrHeader);
+//  std::cout<<"receive end ----- trrHeader.GetDst="<<trrHeader.GetDst()<<std::endl;
   /*std::cout << "trrHeader.GetDst () === "<< trrHeader.GetDst () << std::endl;
   std::cout << "trrHeader.GetOrigin () === "<< trrHeader.GetOrigin() << std::endl;
   std::cout << "trrHeader.GetDT () === "<< trrHeader.GetDT() << std::endl;*/
@@ -2155,30 +2156,32 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
 
   bool status = false;
 
-  TRRHeader trrHeaderReply;
   for (std::vector<TrustTableEntry>::iterator it = m_trustTable.getTrustTableEntries().begin(); it != m_trustTable.getTrustTableEntries().end(); it++)
    {
  	  if(it->getDestinationNode() == trrHeader.GetDst())
  	  {
- 		trrHeaderReply.SetOrigin(trrHeader.GetOrigin());
- 		trrHeaderReply.SetDst(trrHeader.GetDst());
- 		trrHeaderReply.setDT(it->getDirectTrust());
- 		trrHeaderReply.setGT(it->getGlobalTrust());
- 		trrHeaderReply.SetTrrLifetime(trrHeader.GetTrrLifetime());
+// 		std::cout<<"Setting the DT to packet --- "<<it->getDirectTrust()<<std::endl;
+ 		double val = it->getDirectTrust();
+ 		trrHeader.setDT(val);
+ 		double val_GT = it->getGlobalTrust();
+ 		trrHeader.setGT(val_GT);
  		status = true;
+ 		break;
  	  }
    }
 
    Ptr<Packet> packetReply = Create<Packet> ();
-   packetReply->AddHeader (trrHeaderReply);
+   packetReply->AddHeader (trrHeader);
+/*
    TypeHeader tHeader (AODVTYPE_TRR);
    packetReply->AddHeader (tHeader);
+*/
 
    if(status)
    {
 	   RoutingTableEntry searchingRoutingEntry;
 	   if(m_routingTable.LookupValidRoute(trrHeader.GetOrigin(), searchingRoutingEntry)){
-//		   std::cout << "trrHeader.GetDT() ========= "<< trrHeader.GetDT()<<std::endl;
+//		   std::cout << "trrHeaderReply.GetDT() ========= "<< trrHeader.GetDT()<<std::endl;
 		   Ptr<Socket> socket = FindSocketWithInterfaceAddress(searchingRoutingEntry.GetInterface ());
 	   	   Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))), &RoutingProtocol::SendTo, this, socket, packetReply, sender);
 	   }

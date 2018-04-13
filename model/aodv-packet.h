@@ -358,10 +358,10 @@ public:
 
   ///\name Fields
   //\{
-  uint32_t GetDT () {return m_DT;}
-  void setDT(uint32_t dt) { m_DT = dt; }
-  uint32_t GetGT () {return m_GT;}
-  void setGT(uint32_t gt) { m_GT = gt; }
+  double GetDT () { return m_DT;}
+  void setDT(double dt) { m_DT = dt; }
+  double GetGT () {return m_GT;}
+  void setGT(double gt) { m_GT = gt; }
   void SetId (uint32_t id) { m_trrID = id; }
   uint32_t GetId () const { return m_trrID; }
   void SetDst (Ipv4Address a) { m_dst = a; }
@@ -390,8 +390,8 @@ public:
 
   bool operator== (TRRHeader const & o) const;
 private:
-  uint32_t 		 m_GT;			   ///<Global Trust
-  uint32_t 		 m_DT;			   ///<Direct Trust
+  double 		 m_GT;			   ///<Global Trust
+  double 		 m_DT;			   ///<Direct Trust
   uint32_t       m_trrID;          ///< TRR ID
   Ipv4Address    m_dst;            ///< Destination IP Address
   uint32_t       m_dstSeqNo;       ///< Destination Sequence Number
