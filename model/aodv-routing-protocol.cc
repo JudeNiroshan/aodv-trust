@@ -52,6 +52,7 @@
 #include "TrustTableEntry.h"
 #include "ns3/aodv-trust-helper.h"
 #include "aodv-packet.h"
+#include <sstream>
 
 NS_LOG_COMPONENT_DEFINE ("AodvTrustRoutingProtocol");
 
@@ -2123,9 +2124,9 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
   TRRHeader trrHeader;
   packet->RemoveHeader(trrHeader);
 //  std::cout<<"receive end ----- trrHeader.GetDst="<<trrHeader.GetDst()<<std::endl;
-  /*std::cout << "trrHeader.GetDst () === "<< trrHeader.GetDst () << std::endl;
+  std::cout << "trrHeader.GetDst () === "<< trrHeader.GetDst () << std::endl;
   std::cout << "trrHeader.GetOrigin () === "<< trrHeader.GetOrigin() << std::endl;
-  std::cout << "trrHeader.GetDT () === "<< trrHeader.GetDT() << std::endl;*/
+  std::cout << "trrHeader.GetDT () === "<< trrHeader.GetDT() << std::endl;
 
   if (IsMyOwnAddress (trrHeader.GetDst ()))
   {
@@ -2162,9 +2163,27 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
  	  {
 // 		std::cout<<"Setting the DT to packet --- "<<it->getDirectTrust()<<std::endl;
  		double val = it->getDirectTrust();
- 		trrHeader.setDT(val);
+ 		std::ostringstream strs;
+ 		strs << val;
+ 		std::string str = strs.str();
+ 		std::string decimalStr = str.substr(0, str.find("."));
+ 		std::string floatStr = str.substr(str.find(".") + 1);
+ 		uint32_t flt = atoi(floatStr.c_str());
+
+ 		Ipv4Address dt;
+ 		dt.Set(flt);
+ 		trrHeader.setDT(flt);
  		double val_GT = it->getGlobalTrust();
- 		trrHeader.setGT(val_GT);
+ 		std::ostringstream strs2;
+ 		strs2 << val_GT;
+ 		std::string str2 = strs2.str();
+ 		std::string decimalStr2 = str2.substr(0, str2.find("."));
+ 		std::string floatStr2 = str2.substr(str2.find(".") + 1);
+ 		uint32_t flt2 = atoi(floatStr2.c_str());
+
+ 		Ipv4Address gt;
+ 		gt.Set(flt2);
+ 		trrHeader.setGT(flt2);
  		status = true;
  		break;
  	  }
@@ -2181,7 +2200,7 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
    {
 	   RoutingTableEntry searchingRoutingEntry;
 	   if(m_routingTable.LookupValidRoute(trrHeader.GetOrigin(), searchingRoutingEntry)){
-//		   std::cout << "trrHeaderReply.GetDT() ========= "<< trrHeader.GetDT()<<std::endl;
+		   std::cout << "trrHeader.GetDT() ========= "<< trrHeader.GetDT()<<std::endl;
 		   Ptr<Socket> socket = FindSocketWithInterfaceAddress(searchingRoutingEntry.GetInterface ());
 	   	   Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))), &RoutingProtocol::SendTo, this, socket, packetReply, sender);
 	   }

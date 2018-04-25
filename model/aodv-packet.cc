@@ -676,16 +676,17 @@ TRRHeader::GetInstanceTypeId () const
 uint32_t
 TRRHeader::GetSerializedSize () const
 {
-  return 22;
+  return 28;
 }
 
 void
 TRRHeader::Serialize (Buffer::Iterator i) const
 {
+  i.WriteU32(m_GT);
   std::cout<<"Serialize    m_GT="<<m_GT<<std::endl;
-  i.WriteU16(m_GT);
   WriteTo (i, m_dst);
-  i.WriteU8(m_DT);
+  i.WriteU32(m_DT);
+  std::cout<<"Serialize    m_DT="<<m_DT<<std::endl;
   i.WriteHtonU32 (m_trrID);
   i.WriteHtonU32 (m_dstSeqNo);
   WriteTo (i, m_origin);
@@ -695,19 +696,19 @@ TRRHeader::Serialize (Buffer::Iterator i) const
 uint32_t
 TRRHeader::Deserialize (Buffer::Iterator start)
 {
-//	std::cout<<"while deserializing start.GetSize()::::"<<start.GetSize()<<std::endl;
   Buffer::Iterator i = start;
-  uint16_t newVar = i.ReadU16();
-  std::cout<<"Deserialize   m_GT="<<newVar<<std::endl;
+  m_GT = i.ReadU32();
   ReadFrom (i, m_dst);
-  m_DT = i.ReadU8();
+  std::cout<<"Deserialize   m_dst="<<m_dst<<std::endl;
+  m_DT = i.ReadU32();
+  std::cout<<"Deserialize   m_DT="<<m_DT<<std::endl;
   m_trrID = i.ReadNtohU32 ();
   m_dstSeqNo = i.ReadNtohU32 ();
   ReadFrom (i, m_origin);
   m_originSeqNo = i.ReadNtohU32 ();
 
   uint32_t dist = i.GetDistanceFrom (start);
-//  NS_ASSERT (dist == GetSerializedSize ());
+  NS_ASSERT (dist == GetSerializedSize ());
   return dist;
 }
 

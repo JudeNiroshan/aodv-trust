@@ -19,8 +19,8 @@ private:
 
 	Ipv4Address targetNodeId;
 	Ipv4Address senderNodeId;
-	double directTrust;
-	double globalTrust;
+	uint32_t directTrust;
+	uint32_t globalTrust;
 	Time sentTime;
 	Time receivedTime;
 
@@ -29,10 +29,10 @@ public:
 	void setTargetNodeId(Ipv4Address neighborNodeId);
 	Ipv4Address getSenderNodeId();
 	void setSenderNodeId(Ipv4Address neighborNodeId);
-	double getDirectTrust();
-	void setDirectTrust(double DT);
-	double getGlobalTrust();
-	void setGlobalTrust(double DT);
+	uint32_t getDirectTrust();
+	void setDirectTrust(uint32_t DT);
+	uint32_t getGlobalTrust();
+	void setGlobalTrust(uint32_t DT);
 	Time getSentTime();
 	void setSentTime(Time sentTime);
 	Time getReceivedTime();
