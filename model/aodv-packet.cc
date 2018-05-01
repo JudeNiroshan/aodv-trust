@@ -691,6 +691,7 @@ TRRHeader::Serialize (Buffer::Iterator i) const
   i.WriteHtonU32 (m_dstSeqNo);
   WriteTo (i, m_origin);
   i.WriteHtonU32 (m_originSeqNo);
+//  Print(std::cout);
 }
 
 uint32_t
@@ -708,14 +709,15 @@ TRRHeader::Deserialize (Buffer::Iterator start)
   m_originSeqNo = i.ReadNtohU32 ();
 
   uint32_t dist = i.GetDistanceFrom (start);
-  NS_ASSERT (dist == GetSerializedSize ());
+  Print(std::cout); //Printing out the entire TRR header
+//  NS_ASSERT (dist == GetSerializedSize ());
   return dist;
 }
 
 void
 TRRHeader::Print (std::ostream &os) const
 {
-  os << "TRR ID " << m_trrID << " destination: ipv4 " << m_dst
+  os << "m_GT " << m_GT << " m_DT " << m_DT << " destination: ipv4 " << m_dst
      << " sequence number " << m_dstSeqNo << " source: ipv4 "
      << m_origin << " sequence number " << m_originSeqNo ;
 }

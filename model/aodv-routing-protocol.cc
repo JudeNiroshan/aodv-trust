@@ -2055,6 +2055,7 @@ RoutingProtocol::sendTRR(Ipv4Address source, Ipv4Address receiver, Ipv4Address t
 	  trrHeader.SetOrigin (source);
 	  trrHeader.SetTarget(targetNode);
 	  trrHeader.SetTrrLifetime(Simulator::Now());
+	  trrHeader.SetDstSeqno(150);
 
 
 
@@ -2063,14 +2064,8 @@ RoutingProtocol::sendTRR(Ipv4Address source, Ipv4Address receiver, Ipv4Address t
                m_socketAddresses.begin (); j != m_socketAddresses.end (); ++j)
           {
             Ptr<Socket> socket = j->first;
-//            Ipv4InterfaceAddress iface = j->second;
 
-			/*Ptr<Packet> packet = Create<Packet>();
-			packet->AddHeader(trrHeader);
-			TypeHeader tHeader(AODVTYPE_TRR);
-			packet->AddHeader(tHeader);
-			*/
-			Ptr<Packet> packet = Create<Packet> ();
+            Ptr<Packet> packet = Create<Packet> ();
 			      packet->AddHeader (trrHeader);
 			      TypeHeader tHeader (AODVTYPE_TRR);
 			      packet->AddHeader (tHeader);
@@ -2121,14 +2116,15 @@ void
 RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
 {
   RoutingTableEntry rt;
-  TRRHeader trrHeader;
+  TRRHeader trrHeader(AODVTYPE_TRR);
+  std::cout<<packet<<std::endl;
   packet->RemoveHeader(trrHeader);
 //  std::cout<<"receive end ----- trrHeader.GetDst="<<trrHeader.GetDst()<<std::endl;
   std::cout << "trrHeader.GetDst () === "<< trrHeader.GetDst () << std::endl;
   std::cout << "trrHeader.GetOrigin () === "<< trrHeader.GetOrigin() << std::endl;
   std::cout << "trrHeader.GetDT () === "<< trrHeader.GetDT() << std::endl;
 
-  if (IsMyOwnAddress (trrHeader.GetDst ()))
+  if (IsMyOwnAddress (trrHeader.GetOrigin()))
   {
 	  std::cout << "TRR BACK TO HOME!!! "<< std::endl;
 //	  rec = sendTRR(node, targetNode);
@@ -2161,7 +2157,6 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
    {
  	  if(it->getDestinationNode() == trrHeader.GetDst())
  	  {
-// 		std::cout<<"Setting the DT to packet --- "<<it->getDirectTrust()<<std::endl;
  		double val = it->getDirectTrust();
  		std::ostringstream strs;
  		strs << val;
@@ -2190,6 +2185,7 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
    }
 
    Ptr<Packet> packetReply = Create<Packet> ();
+   trrHeader.SetDstSeqno(152);
    packetReply->AddHeader (trrHeader);
 /*
    TypeHeader tHeader (AODVTYPE_TRR);
@@ -2200,17 +2196,12 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
    {
 	   RoutingTableEntry searchingRoutingEntry;
 	   if(m_routingTable.LookupValidRoute(trrHeader.GetOrigin(), searchingRoutingEntry)){
-		   std::cout << "trrHeader.GetDT() ========= "<< trrHeader.GetDT()<<std::endl;
+		   std::cout << " \n trrHeader.GetDT() ========= "<< trrHeader.GetDT()<<std::endl;
 		   Ptr<Socket> socket = FindSocketWithInterfaceAddress(searchingRoutingEntry.GetInterface ());
+		   trrHeader.Print(std::cout); //Printing the TRR header packet into Terminal
 	   	   Simulator::Schedule (Time (MilliSeconds (m_uniformRandomVariable->GetInteger (0, 10))), &RoutingProtocol::SendTo, this, socket, packetReply, sender);
 	   }
    }
-/*  if(m_routingTable.LookupRoute (sender, rt))
-    {
-      rt.m_ackTimer.Cancel ();
-      rt.SetFlag (VALID);
-      m_routingTable.Update (rt);
-    }*/
  }
 
 void RoutingProtocol::execute() {
