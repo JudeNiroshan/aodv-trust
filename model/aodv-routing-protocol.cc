@@ -2006,7 +2006,7 @@ void RoutingProtocol::RecvTrr(Ipv4Address sender, Ptr<Packet> packet) {
 	TRRHeader trrHeader;
 	packet->RemoveHeader(trrHeader);
 
-	if (IsMyOwnAddress(trrHeader.GetDst())) {
+	if (IsMyOwnAddress(trrHeader.GetOrigin())) {
 		Time time = trrHeader.GetTrrLifetime();
 		Time currentTime = Simulator::Now();
 
