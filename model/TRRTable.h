@@ -4,14 +4,10 @@
 #include "ns3/ipv4-address.h"
 #include "TRRTableEntry.h"
 
-namespace ns3
-{
-namespace aodv
-{
+namespace ns3 {
+namespace aodv {
 
-
-class TRRTable
-{
+class TRRTable {
 private:
 	std::string columnSeperator;
 	std::vector<TRRTableEntry> trrTableRecords;
@@ -23,7 +19,6 @@ public:
 	std::vector<TRRTableEntry>& getTrrNodeEntries(Ipv4Address nodeId);
 	void setRecommendationTable(std::vector<TRRTableEntry> newTrustTable);
 	void printTable();
-
 	~TRRTable();
 };
 
