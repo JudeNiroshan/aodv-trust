@@ -19,6 +19,7 @@ public:
 	void addTrustTableEntry(TrustTableEntry entry);
 	void removeTrustTableEntry(TrustTableEntry entry);
 	TrustTableEntry* getTrustTableEntryByNodeId(Ipv4Address nodeId);
+	TrustTableEntry getTrustTableEntryByNodeIdCopy(Ipv4Address nodeId);
 	std::vector<TrustTableEntry> getBlacklistedTrustTableEntries();
 	std::vector<TrustTableEntry>& getTrustTableEntries();
 	void setTrustTable(std::vector<TrustTableEntry> newTrustTable);

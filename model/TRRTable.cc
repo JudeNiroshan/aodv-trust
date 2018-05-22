@@ -23,6 +23,10 @@ std::vector<TRRTableEntry>& TRRTable::getTrrTableEntries() {
 	return trrTableRecords;
 }
 
+std::vector<TRRTableEntry> TRRTable::getTrrTableEntriesCopy() {
+	return trrTableRecords;
+}
+
 std::vector<TRRTableEntry>& TRRTable::getTrrNodeEntries(Ipv4Address nodeId) {
 	// TODO: return the recommended node entry vector
 	std::vector<TRRTableEntry>& test = this->getTrrTableEntries();

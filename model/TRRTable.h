@@ -15,6 +15,7 @@ public:
 	TRRTable();
 	void addTrrTableEntry(TRRTableEntry entry);
 	void removeTrrTableEntry(TRRTableEntry entry);
+	std::vector<TRRTableEntry> getTrrTableEntriesCopy();
 	std::vector<TRRTableEntry>& getTrrTableEntries();
 	std::vector<TRRTableEntry>& getTrrNodeEntries(Ipv4Address nodeId);
 	void setRecommendationTable(std::vector<TRRTableEntry> newTrustTable);

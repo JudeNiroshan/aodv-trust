@@ -1,4 +1,3 @@
-
 #include "IndTrustCal.h"
 #include "TrustTableEntry.h"
 #include "DirTrustCal.h"
@@ -78,6 +77,10 @@ double* IndTrustCal::sendTRR(TrustTableEntry node, TrustTableEntry targetNode) {
 	static double rec[2];
 	rec[0] = 0.5;
 	rec[1] = 0.6;
+	if (this->flag1 == 2) {
+		rec[0] = targetNode.getDirectTrust();
+		rec[1] = targetNode.getGlobalTrust();
+	}
 	return rec;
 }
 
@@ -88,6 +91,19 @@ double* IndTrustCal::sendTRR(TrustTableEntry node, TrustTableEntry targetNode) {
  */
 void IndTrustCal::setTrustTable(TrustTable* trustTable) {
 	this->trustTable = trustTable;
+}
+
+/**
+ * Method:    setTrrTable
+ * Returns:
+ * Parameter: trrTable
+ */
+void IndTrustCal::setTrrTable(TRRTable* trrTable) {
+	this->trrTable = trrTable;
+}
+
+void IndTrustCal::setFlag(uint flag1) {
+	this->flag1 = flag1;
 }
 
 /**

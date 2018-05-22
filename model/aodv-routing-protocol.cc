@@ -2027,30 +2027,9 @@ void RoutingProtocol::RecvTrr(Ipv4Address sender, Ptr<Packet> packet) {
 
 	bool status = false;
 
-	/*for (std::vector<Ipv4Address>::iterator it = nodeIpv4.begin();
-	 it != nodeIpv4.end(); it++) {
-
-	 TRRTableEntry entry;
-	 Time currentTime = Simulator::Now();
-	 entry.setSenderNodeId(*it);
-	 entry.setSentTime(trrHeader.GetTrrLifetime());
-	 entry.setReceivedTime(currentTime);
-
-	 for (std::vector<TrustTableEntry>::iterator it1 =
-	 m_trustTable.getTrustTableEntries().begin();
-	 it1 != m_trustTable.getTrustTableEntries().end(); it1++) {
-
-	 entry.setTargetNodeId(it1->getDestinationNode());
-	 entry.setDirectTrust(it1->getDirectTrust());
-	 entry.setGlobalTrust(it1->getGlobalTrust());
-	 m_TRRTable.addTrrTableEntry(entry);
-	 status = true;
-	 }
-
-	 }
-	 */
-
 	uint nodeCount = 0;
+	IndTrustCal indTrustCal;
+	indTrustCal.setTrustTable(&m_trustTable);
 
 	for (std::vector<Ipv4Address>::iterator it = nodeIpv4.begin();
 			it != nodeIpv4.end(); it++) {
@@ -2069,6 +2048,8 @@ void RoutingProtocol::RecvTrr(Ipv4Address sender, Ptr<Packet> packet) {
 			entry.setDirectTrust(it1->getDirectTrust());
 			entry.setGlobalTrust(it1->getGlobalTrust());
 			m_TRRTable.addTrrTableEntry(entry);
+			indTrustCal.setTrrTable(&m_TRRTable);
+			indTrustCal.setFlag(2);
 			nodeCount++;
 			status = true;
 		}
@@ -2097,6 +2078,26 @@ void RoutingProtocol::RecvTrr(Ipv4Address sender, Ptr<Packet> packet) {
 						<< "\n  ================== Printing TRR table =================="
 						<< std::endl;
 				m_TRRTable.printTable();
+				std::vector<TRRTableEntry> node_entry_list =
+						m_TRRTable.getTrrTableEntriesCopy();
+				for (std::vector<TRRTableEntry>::iterator it =
+						node_entry_list.begin(); it != node_entry_list.end();
+						it++) {
+					TrustTableEntry trustTableEntry =
+							m_trustTable.getTrustTableEntryByNodeIdCopy(
+									it->getTargetNodeId());
+
+					double ind_trust_value = indTrustCal.calculateIndirectTrust(
+							trustTableEntry);
+					trustTableEntry.updateIndirectTrust(ind_trust_value);
+					trustTableEntry.calculateGlobalTrust();
+					std::cout << "Target "
+							<< trustTableEntry.getDestinationNode() << " DT "
+							<< trustTableEntry.getDirectTrust() << " IDT "
+							<< trustTableEntry.getIndirectTrust() << " GT "
+							<< trustTableEntry.getGlobalTrust() << std::endl;
+
+				}
 			}
 
 		}
